@@ -28,10 +28,14 @@ The circular restricted three body problem (CR3BP) is a special case of the thre
         tdplot_main_coords
         ]
 
-        \draw[dotted, fill=none, red](0,0,0) circle (1);
-        \draw[dotted, fill=none, blue](0,0,0) circle (3);
         \node (B1) at (-1,0,0)     [planet=red, label=left:$m_1$];
         \node (B2) at (3,0,0)      [planet=blue, label=right:$m_2$];
+        \draw[dashed, <->, lightgray] (-1,0,-1) -- (3,0,-1) node[midway, below] {$d$};
+        \draw[dotted, thin, lightgray] (B1) -- ++(0,0,-1);
+        \draw[dotted, thin, lightgray] (B2) -- ++(0,0,-1);
+        
+        \draw[dash dot, fill=none, red](0,0,0) circle (1);
+        \draw[dash dot, fill=none, blue](0,0,0) circle (3);
 
         \draw[dashed, red] (B1) -- (0,0,0) node[midway] {$x_1$};
         \draw[dashed, blue] (0,0,0) -- (B2) node[midway] {$x_2$};
@@ -43,14 +47,19 @@ The circular restricted three body problem (CR3BP) is a special case of the thre
         \draw[->, gray] (0,0,0) -- (0.75,0,0) node[near end, below right] {$\vh{x}$};
         \draw[->, gray] (0,0,0) -- (0,0.75,0) node[near end, above] {$\vh{y}$};
         \draw[->, gray] (0,0,0) -- (0,0,0.75) node[near end, above left] {$\vh{z}$};
+
+        \draw[dashed, gray] (0,0,0) -- (0,0,2);
+        \draw[->, gray] (0.5,0,2) arc (0:270:0.5) node [midway, above] {$\Omega$};
     \end{tikzpicture}
 
-    \caption{Geometry. The purple satellite is located by $\vv{r}=x\vh{x}+y\vh{y}+z\vh{z}$, and the spheres are the celestial bodies. Note that $\vv{r}$ is not constrained to the $xy$ plane, but $m_1$ and $m_2$ definitionally are. The bodies are always along the $x$ axis, as the $c$ frame rotates with them}
+    \caption{Geometry}
 \end{figure}
 
-Because $\vh{x}$ points from $c$ to $m_2$, which is not inertially stationary, the $xyz$ frame is rotating. Specifically, it is rotating positively about $z$. Because the celestial bodies are in a circular orbit, their rates of rotation about $c$ are constant. This means that the $xyz$ frame rotates at a constant rate of $\vv{\omega}=\Omega\vh{z}$ 
+The purple satellite is located by $\vv{r}=x\vh{x}+y\vh{y}+z\vh{z}$, and the spheres are the celestial bodies. The $xyz$ frame is not inertially stationary. Instead, they rotate with the larger bodies at a rate $\Omega$. The origin $c$ is the center of mass of $m_1$ and $m_2$ (and therefore inertially fixed). The $xy$ plane defines the plane in which $m_1$ and $m_2$ orbit, so $\vh{z}$ is defined by the direction of their angular momenta- the constant rotation at a rate $\Omega$ is a consequence of this. Note that $\vv{r}$ is not constrained to the $xy$ plane, but $m_1$ and $m_2$ definitionally are. 
 
-We can also find a relationship between $x_1$, $x_2$, $r_{12}$, $m_1$, and $m_2$. Because $c$ is the barycenter,
+\section*{Useful Relations}
+
+We can also find a relationship between $x_1$, $x_2$, $d$, $m_1$, and $m_2$. Because $c$ is the barycenter,
 \[x_1m_1=x_2m_2\]
 or
 \[\frac{x_1}{m_2}=\frac{x_2}{m_1}\]
@@ -62,13 +71,36 @@ We can use this to find that
 &=\frac{m_2}{m_2+m_1}\\
 \end{aligned}\]
 
-Defining $r_{12}=x_1+x_2$ as the distance between the two celestial bodies, and $M=m_1+m_2$ as their total mass, we get that
-\[\boxed{\frac{x_1}{r_{12}}=\frac{m_2}{M}}\]
+Defining $d=x_1+x_2$ as the distance between the two celestial bodies, and $M=m_1+m_2$ as their total mass, we get that
+\[\boxed{\frac{x_1}{d}=\frac{m_2}{M}}\]
 and similarly
-\[\boxed{\frac{x_2}{r_{12}}=\frac{m_1}{M}}\]
+\[\boxed{\frac{x_2}{d}=\frac{m_1}{M}}\]
+
 
 Which can be rewritten as
-\[\boxed{\frac{x_1}{m_2}=\frac{x_2}{m_1}=\frac{r_{12}}{M}}\]
+\[\boxed{\frac{x_1}{m_2}=\frac{x_2}{m_1}=\frac{d}{M}}\]
+
+Lastly, we will define two additional vectors $\vv{r_1}$ and $\vv{r_2}$ which point from the first and second body respectively to the satellite.
+\[\vv{r_1}=\left(x+x_1\right)\vh{x}+y\vh{y}+z\vh{z}\]
+and
+\[\vv{r_2}=\left(x-x_2\right)\vh{x}+y\vh{y}+z\vh{z}\]
+
+Now we will solve for $\Omega$.
+\[\begin{aligned}
+    \vv{F_{\text{on2}}}&=-\frac{Gm_1m_2}{d^2}\vh{x}\\
+    \cancel{m_2}\vv{a}_2^f&=-\frac{Gm_1\cancel{m_2}}{d^2}\vh{x}\\
+    \dd{^f}{t}\left(\dd{^f}{t}x_2\vh{x}\right)&=-\frac{Gm_1}{d^2}\vh{x}\\
+    \dd{^f}{t}\left(\cancelto{0}{\dd{^c x_2\vh{x}}{t}}+\Omega\vh{z}\times x_2\vh{x}\right)&=-\frac{Gm_1}{d^2}\vh{x}\\
+    \dd{^f}{t}\Omega x_2\vh{y}&=-\frac{Gm_1}{d^2}\vh{x}\\
+    \cancelto{0}{\dd{^c}{t}\Omega x_2 \vh{y}}+\Omega\vh{z}\times\Omega x_2\vh{y}&=-\frac{Gm_1}{d^2}\vh{x}\\
+    -\Omega^2 x_2\vh{x}&=-\frac{Gm_1}{d^2}\vh{x}\\
+    \Omega^2x_2&=\frac{Gm_1}{d^2}\\
+    \Omega&=\sqrt{\frac{G}{d^2}\frac{m_1}{x_2}}\\
+    \Omega&=\sqrt{\frac{GM}{d^3}}\\
+\end{aligned}\]
+
+Defining $\mu$ conventionally as $\mu=GM$,
+\[\boxed{\Omega=\sqrt{\frac{\mu}{d^3}}}\]
 
 \section*{Kinematics}
 The transport theorem states that the inertial (fixed $f$ frame) derivative of a vector $u$ (expressed in the rotating $c$ frame) is
@@ -76,27 +108,6 @@ The transport theorem states that the inertial (fixed $f$ frame) derivative of a
 \[\dd{^f \vv{u}}{t}=\dd{^c\vv{u}}{t}+\vv{\omega}^{cf}\times\vv{u}\]
 
 Where $\dd{^f}{t}$ denotes the derivative in the coordinates of the fixed frame $f$, and $\dd{^c}{t}$ denotes derivative in the coordinates of the rotating frame $c$, and $\vv{\omega}^{cf}$ denotes the angular velocity of $c$ in $f$. For this case, $\vv{\omega}^{cf}=\Omega\vh{z}$. We can find $\Omega$
-
-\begin{comment}
-Now we will solve for $\Omega$. Note that, because $c$ is the center of mass of $m_1$ and $m_2$, 
-
-\[\begin{aligned}
-    \vv{F_{\text{on2}}}&=-\frac{Gm_1m_2}{r_{12}^2}\vh{x}\\
-    \cancel{m_2}\vv{a}_2^f&=-\frac{Gm_1\cancel{m_2}}{r_{12}^2}\vh{x}\\
-    \dd{^f}{t}\left(\dd{^f}{t}x_2\vh{x}\right)&=-\frac{Gm_1}{r_{12}^2}\vh{x}\\
-    \dd{^f}{t}\left(\cancelto{0}{\dd{^c x_2\vh{x}}{t}}+\Omega\vh{z}\times x_2\vh{x}\right)&=-\frac{Gm_1}{r_{12}^2}\vh{x}\\
-    \dd{^f}{t}\Omega x_2\vh{y}&=-\frac{Gm_1}{r_{12}^2}\vh{x}\\
-    \cancelto{0}{\dd{^c}{t}\Omega x_2 \vh{y}}+\Omega\vh{z}\times\Omega x_2\vh{y}&=-\frac{Gm_1}{r_{12}^2}\vh{x}\\
-    -\Omega^2 x_2\vh{x}&=-\frac{Gm_1}{r_{12}^2}\vh{x}\\
-    \Omega^2x_2&=\frac{Gm_1}{r_{12}^2}\\
-    \Omega&=\sqrt{\frac{G}{r_{12}^2}\frac{m_1}{x_2}}\\
-    \Omega&=\sqrt{\frac{GM}{r_{12}^3}}\\
-\end{aligned}\]
-
-Defining $\mu$ conventionally as $\mu=GM$,
-\[\boxed{\Omega=\sqrt{\frac{\mu}{r_{12}^3}}}\]
-
-\end{comment}
 
 For the satellite's position in the CR3BP frame $\vv{r}=x\vh{x}+y\vh{y}+z\vh{z}$, we will find the inertial acceleration to generate equations of motion.
 
@@ -122,6 +133,45 @@ For the satellite's position in the CR3BP frame $\vv{r}=x\vh{x}+y\vh{y}+z\vh{z}$
 
 \[\boxed{\vv{\ddot{r}}=\left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}}\]
 
+\section*{Equations of Motion}
+We can now generate the equations of motion
+
+\[\begin{aligned}
+\sum_i \vv{F_i}&=m\vv{\ddot{r}}\\
+\vv{F_1}+\vv{F_1}&=m\vv{\ddot{r}}\\
+-\frac{\mu_1m}{r_1^3}\vv{r_1}-\frac{\mu_2m}{r_2^3}\vv{r_2}&=m\vv{\ddot{r}}\\
+-\frac{\mu_1}{r_1^3}\vv{r_1}-\frac{\mu_2}{r_2^3}\vv{r_2}&=\left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}
+\end{aligned}\]
+
+We now write this as three equations, one each in $x$, $y$, and $z$
+\[\begin{aligned}
+    -\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)&=\ddot{x}-2\Omega\dot{y}-\Omega^2 x\\
+    -\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y&=\ddot{y}+2\Omega\dot{x}-\Omega^2 y\\
+    -\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z&=\ddot{z}
+\end{aligned}\]
+
+Isolating the second derivatives,
+
+\[\begin{aligned}
+    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\Omega\dot{y}+\Omega^2 x\\
+    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\Omega\dot{x}+\Omega^2 y\\
+    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+\end{aligned}\]
+    
+We can now substitute $\Omega=\sqrt{\frac{\mu}{d^3}}=\sqrt{\frac{\mu_1+\mu_2}{d^3}}$
+
+\[\begin{aligned}
+    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\sqrt{\frac{\mu}{d^3}}\dot{y}+\frac{\mu}{d^3}x\\
+    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\dot{x}+\frac{\mu}{d^3}y\\
+    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+\end{aligned}\]
+
+We can also get rid of $\mu_2$ and $x_2$
+\[\begin{aligned}
+    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-d+x_1)+2\sqrt{\frac{\mu}{d^3}}\dot{y}+\frac{\mu}{d^3}x\\
+    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu-\mu_1}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\dot{x}+\frac{\mu}{d^3}y\\
+    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu-\mu_1}{r_2^3}z
+\end{aligned}\]
 
 
 
