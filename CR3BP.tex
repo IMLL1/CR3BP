@@ -71,14 +71,14 @@ We can use this to find that
 &=\frac{m_2}{m_2+m_1}\\
 \end{aligned}\]
 
-Defining $d=x_1+x_2$ as the distance between the two celestial bodies, and $M=m_1+m_2$ as their total mass, we get that
-\[\boxed{\frac{x_1}{d}=\frac{m_2}{M}}\]
+Defining $d=x_1+x_2$ as the distance between the two celestial bodies, and $m=m_1+m_2$ as their total mass, we get that
+\[\boxed{\frac{x_1}{d}=\frac{m_2}{m}}\]
 and similarly
-\[\boxed{\frac{x_2}{d}=\frac{m_1}{M}}\]
+\[\boxed{\frac{x_2}{d}=\frac{m_1}{m}}\]
 
 
 Which can be rewritten as
-\[\boxed{\frac{x_1}{m_2}=\frac{x_2}{m_1}=\frac{d}{M}}\]
+\[\boxed{\frac{x_1}{m_2}=\frac{x_2}{m_1}=\frac{d}{m}}\]
 
 Lastly, we will define two additional vectors $\vv{r_1}$ and $\vv{r_2}$ which point from the first and second body respectively to the satellite.
 \[\vv{r_1}=\left(x+x_1\right)\vh{x}+y\vh{y}+z\vh{z}\]
@@ -96,10 +96,10 @@ Now we will solve for $\Omega$.
     -\Omega^2 x_2\vh{x}&=-\frac{Gm_1}{d^2}\vh{x}\\
     \Omega^2x_2&=\frac{Gm_1}{d^2}\\
     \Omega&=\sqrt{\frac{G}{d^2}\frac{m_1}{x_2}}\\
-    \Omega&=\sqrt{\frac{GM}{d^3}}\\
+    \Omega&=\sqrt{\frac{Gm}{d^3}}\\
 \end{aligned}\]
 
-Defining $\mu$ conventionally as $\mu=GM$,
+Defining $\mu$ conventionally as $\mu=Gm$,
 \[\boxed{\Omega=\sqrt{\frac{\mu}{d^3}}}\]
 
 \section*{Kinematics}
@@ -160,19 +160,69 @@ Isolating the second derivatives,
     
 We can now substitute $\Omega=\sqrt{\frac{\mu}{d^3}}=\sqrt{\frac{\mu_1+\mu_2}{d^3}}$
 
-\[\begin{aligned}
+\[\boxed{\begin{aligned}
     \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\sqrt{\frac{\mu}{d^3}}\dot{y}+\frac{\mu}{d^3}x\\
     \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\dot{x}+\frac{\mu}{d^3}y\\
     \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
-\end{aligned}\]
+\end{aligned}}\]
 
-We can also get rid of $\mu_2$ and $x_2$
+\section*{Nondimensional Equations of Motion}
+We will now begin to non-dimensionalize the EOMs.
+
+First, we will change the time unit. We will pick $t^\star=t\sqrt{\mu/d^3}$ (recall that $\sqrt{\mu/d^3}=\Omega$, which has dimensions of $\text{time}^{-1}$). Everywhere that a derivative is present, it is implied to be with respect to the time unit of 1 second. We must therefore switch from implied $\dd{}{t}$ to implied $\dd{}{t^\star}$.
+
 \[\begin{aligned}
-    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-d+x_1)+2\sqrt{\frac{\mu}{d^3}}\dot{y}+\frac{\mu}{d^3}x\\
-    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu-\mu_1}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\dot{x}+\frac{\mu}{d^3}y\\
-    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu-\mu_1}{r_2^3}z
+    \dd{(\phantom{x})}{t}&=\dd{(\phantom{x})}{t^\star}\dd{t^\star}{t}\\
+    &=\dd{(\phantom{x})}{t^\star}\sqrt{\frac{\mu}{d^3}}
 \end{aligned}\]
 
+From this, it can be seen that to make a derivative with time implied to be with the nondimensional time, $\sqrt{d^3/\mu}$ must be multiplied for each derivative taken. The EOMs can now be rewritten this way, with dots implied to be relative to the nondimensional time unit
 
+\[\begin{aligned}
+    \left(\dd{^2x}{t^{\star2}}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\sqrt{\frac{\mu}{d^3}}\left(\dd{y}{t^\star}\sqrt{\frac{\mu}{d^3}}\right)+\frac{\mu}{d^3}x\\
+    \left(\dd{^2y}{t^{\star2}}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\left(\dd{x}{t^\star}\sqrt{\frac{\mu}{d^3}}\right)+\frac{\mu}{d^3}y\\
+    \left(\ddot{z}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+\end{aligned}\]
+
+Some algebraic simplifications can now be made
+
+\[\begin{aligned}
+    \dd{^2x}{t^{\star2}}&=-\frac{m_1 d^3}{m r_1^3}(x+x_1)-\frac{m_2 d^3}{m r_2^3}(x-x_2)+2\dd{y}{t^\star}+x\\
+    \dd{^2y}{t^{\star2}}&=-\frac{m_1 d^3}{m r_1^3}y-\frac{m_2 d^3}{m r_2^3}y-2\dd{x}{t^\star}+y\\
+    \dd{^2z}{t^{\star2}}&=-\frac{m_1 d^3}{m r_1^3}z-\frac{m_2 d^3}{m r_2^3}z
+\end{aligned}\]
+
+Next, we can define nondimensional distances and masses. The relationship between a nondimensional distance $L^\star$ and its dimensional counterpart is $L^\star=L/d$. Furthermore, we define nondimensional masses a similar relatonship $M^\star=M/m$. With this defined, we can make some substitutions in the EOMs.
+
+\[\begin{aligned}
+    \dd{^2x}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}(x+x_1)-\frac{m_2^\star}{r_2^{\star3}}(x-x_2)+2\dd{y}{t^\star}+x\\
+    \dd{^2y}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}y-\frac{m_2^\star}{r_2^{\star3}}y-2\dd{x}{t^\star}+y\\
+    \dd{^2z}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}z-\frac{m_2^\star}{r_2^{\star3}}z
+\end{aligned}\]
+
+By dividing both sides by $d$, the remaining distances can be made nondimensional.
+
+\[\begin{aligned}
+    \dd{^2x^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}(x^\star+x_1^\star)-\frac{m_2^\star}{r_2^{\star3}}(x^\star-x_2^\star)+2\dd{y^\star}{t^\star}+x^\star\\
+    \dd{^2y^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}y^\star-\frac{m_2^\star}{r_2^{\star3}}y^\star-2\dd{x^\star}{t^\star}+y^\star\\
+    \dd{^2z^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}z^\star-\frac{m_2^\star}{r_2^{\star3}}z^\star
+\end{aligned}\]
+
+$m_2=m-m_1$, $m_2^\star=1-m_1^\star$. Similarly, $x_2^\star=1-x_1^\star$. While $r_1^\star$ and $r_2^\star$ can be written in terms of $x_1^\star$, $x^\star$, $y^\star$, and $z^\star$, I will not do this as it makes the equations much less compact and offers no benifit in computational implimentation.
+
+\[\begin{aligned}
+    \dd{^2x^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}(x^\star+x_1^\star)-\frac{1-m_1^\star}{r_2^{\star3}}(x^\star-1+x_1^\star)+2\dd{y^\star}{t^\star}+x^\star\\
+    \dd{^2y^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}y^\star-\frac{1-m_1^\star}{r_2^{\star3}}y^\star-2\dd{x^\star}{t^\star}+y^\star\\
+    \dd{^2z^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}z^\star-\frac{1-m_1^\star}{r_2^{\star3}}z^\star
+\end{aligned}\]
+
+I will write this with the nondimensionalization implicit instead of explicit. In this space, all parameters represent their nondimensional counterpart.
+
+\[\boxed{\begin{aligned}
+    \ddot{x}&=-\frac{m_1}{r_1^3}(x+x_1)-\frac{1-m_1}{r_2^3}(x-1+x_1)+2\dot{y}+x\\
+    \ddot{y}&=-\frac{m_1}{r_1^3}y-\frac{1-m_1}{r_2^3}y-2\dot{x}+y\\
+    \ddot{z}&=-\frac{m_1}{r_1^3}z-\frac{1-m_1}{r_2^3}z
+\end{aligned}}\]
+The solutions to this differential equation solve the non-dimensional CR3BP, in which the bodies' masses add to 1 and the distance between them is 1. To translate it into real solutions, the time scale, distance scale, and mass scale must be applied.
 
 \end{document}
