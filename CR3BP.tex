@@ -208,10 +208,10 @@ By dividing both sides by $d$, the remaining distances can be made nondimensiona
     \dd{^2z^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}z^\star-\frac{m_2^\star}{r_2^{\star3}}z^\star
 \end{aligned}\]
 
-The final set of substitutions will now be made: $m_2=m-m_1$, $m_2^\star=1-m_1^\star$. Similarly, $x_2^\star=1-x_1^\star$. While $r_1^\star$ and $r_2^\star$ can be written in terms of $x_1^\star$, $x^\star$, $y^\star$, and $z^\star$, I will not do this as it makes the equations much less compact and offers no benifit in computational implimentation.
+The final set of substitutions will now be made: $m_2=m-m_1 \to m_2^\star=1-m_1^\star$. Recall from the useful relations that $\frac{x_1}{d}=\frac{m_2}{m}$, Therefore $x_1^\star=1-m_1^\star$ (and $x_2^\star=m_1^\star$). While $r_1^\star$ and $r_2^\star$ can be written in terms of $x_1^\star$, $x^\star$, $y^\star$, and $z^\star$, I will not do this as it makes the equations much less compact.
 
 \[\begin{aligned}
-    \dd{^2x^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}(x^\star+x_1^\star)-\frac{1-m_1^\star}{r_2^{\star3}}(x^\star-1+x_1^\star)+2\dd{y^\star}{t^\star}+x^\star\\
+    \dd{^2x^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}(x^\star+1-m_1^\star)-\frac{1-m_1^\star}{r_2^{\star3}}(x^\star-m_1^\star)+2\dd{y^\star}{t^\star}+x^\star\\
     \dd{^2y^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}y^\star-\frac{1-m_1^\star}{r_2^{\star3}}y^\star-2\dd{x^\star}{t^\star}+y^\star\\
     \dd{^2z^\star}{t^{\star2}}&=-\frac{m_1^\star}{r_1^{\star3}}z^\star-\frac{1-m_1^\star}{r_2^{\star3}}z^\star
 \end{aligned}\]
@@ -219,10 +219,14 @@ The final set of substitutions will now be made: $m_2=m-m_1$, $m_2^\star=1-m_1^\
 I will write this with the nondimensionalization implicit instead of explicit. In this space, all parameters represent their nondimensional counterpart.
 
 \[\boxed{\begin{aligned}
-    \ddot{x}&=-\frac{m_1}{r_1^3}(x+x_1)-\frac{1-m_1}{r_2^3}(x-1+x_1)+2\dot{y}+x\\
+    \ddot{x}&=-\frac{m_1}{r_1^3}(x+1-m_1)-\frac{1-m_1}{r_2^3}(x-m_1)+2\dot{y}+x\\
     \ddot{y}&=-\frac{m_1}{r_1^3}y-\frac{1-m_1}{r_2^3}y-2\dot{x}+y\\
     \ddot{z}&=-\frac{m_1}{r_1^3}z-\frac{1-m_1}{r_2^3}z
 \end{aligned}}\]
-The solutions to this differential equation solve the non-dimensional CR3BP, in which the bodies' masses add to 1 and the distance between them is 1. To translate it into real solutions, the time scale, distance scale, and mass scale must be applied.
+The solutions to this differential equation solve the non-dimensional CR3BP, in which the bodies' masses add to 1 and the distance between them is 1. To translate it into real solutions, the time scale, distance scale, and mass scale must be applied. Therefore the only thing in this equation that depends upon the speciifc two-body system of interest is $m_1$, or the fraction of the primary mass to the total masses of both planetary .
+
+\section*{Energy Analysis}
+
+There is a "canonical" way of writing 
 
 \end{document}
