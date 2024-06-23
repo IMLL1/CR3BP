@@ -6,6 +6,8 @@
 \usepackage{cancel}
 \usepackage{float}
 \usepackage{comment}
+\usepackage{graphicx}
+\graphicspath{ {./Figures/} }
 \usepackage[a4paper, left=3.5cm,right=3.5cm, top=3cm, bottom=3cm]{geometry}
 
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
@@ -99,8 +101,7 @@ Now we will solve for $\Omega$.
     \Omega&=\sqrt{\frac{Gm}{d^3}}\\
 \end{aligned}\]
 
-Defining $\mu$ conventionally as $\mu=Gm$,
-\[\boxed{\Omega=\sqrt{\frac{\mu}{d^3}}}\]
+\[\boxed{\Omega=\sqrt{\frac{Gm}{d^3}}}\]
 
 \section*{Kinematics}
 The transport theorem states that the inertial (fixed $f$ frame) derivative of a vector $u$ (expressed in the rotating $c$ frame) is
@@ -139,49 +140,49 @@ We can now generate the equations of motion
 \[\begin{aligned}
 \sum_i \vv{F_i}&=m\vv{\ddot{r}}\\
 \vv{F_1}+\vv{F_1}&=m\vv{\ddot{r}}\\
--\frac{\mu_1m}{r_1^3}\vv{r_1}-\frac{\mu_2m}{r_2^3}\vv{r_2}&=m\vv{\ddot{r}}\\
--\frac{\mu_1}{r_1^3}\vv{r_1}-\frac{\mu_2}{r_2^3}\vv{r_2}&=\left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}
+-\frac{Gm_1m}{r_1^3}\vv{r_1}-\frac{Gm_2m}{r_2^3}\vv{r_2}&=m\vv{\ddot{r}}\\
+-\frac{Gm_1}{r_1^3}\vv{r_1}-\frac{Gm_2}{r_2^3}\vv{r_2}&=\left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}
 \end{aligned}\]
 
 We now write this as three equations, one each in $x$, $y$, and $z$
 \[\begin{aligned}
-    -\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)&=\ddot{x}-2\Omega\dot{y}-\Omega^2 x\\
-    -\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y&=\ddot{y}+2\Omega\dot{x}-\Omega^2 y\\
-    -\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z&=\ddot{z}
+    -\frac{Gm_1}{r_1^3}(x+x_1)-\frac{Gm_2}{r_2^3}(x-x_2)&=\ddot{x}-2\Omega\dot{y}-\Omega^2 x\\
+    -\frac{Gm_1}{r_1^3}y-\frac{Gm_2}{r_2^3}y&=\ddot{y}+2\Omega\dot{x}-\Omega^2 y\\
+    -\frac{Gm_1}{r_1^3}z-\frac{Gm_2}{r_2^3}z&=\ddot{z}
 \end{aligned}\]
 
 Isolating the second derivatives,
 
 \[\begin{aligned}
-    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\Omega\dot{y}+\Omega^2 x\\
-    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\Omega\dot{x}+\Omega^2 y\\
-    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+    \ddot{x}&=-\frac{Gm_1}{r_1^3}(x+x_1)-\frac{Gm_2}{r_2^3}(x-x_2)+2\Omega\dot{y}+\Omega^2 x\\
+    \ddot{y}&=-\frac{Gm_1}{r_1^3}y-\frac{Gm_2}{r_2^3}y-2\Omega\dot{x}+\Omega^2 y\\
+    \ddot{z}&=-\frac{Gm_1}{r_1^3}z-\frac{Gm_2}{r_2^3}z
 \end{aligned}\]
     
-We can now substitute $\Omega=\sqrt{\frac{\mu}{d^3}}=\sqrt{\frac{\mu_1+\mu_2}{d^3}}$
+We can now substitute $\Omega=\sqrt{\frac{Gm}{d^3}}=\sqrt{\frac{Gm_1+Gm_2}{d^3}}$
 
 \[\boxed{\begin{aligned}
-    \ddot{x}&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\sqrt{\frac{\mu}{d^3}}\dot{y}+\frac{\mu}{d^3}x\\
-    \ddot{y}&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\dot{x}+\frac{\mu}{d^3}y\\
-    \ddot{z}&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+    \ddot{x}&=-\frac{Gm_1}{r_1^3}(x+x_1)-\frac{Gm_2}{r_2^3}(x-x_2)+2\sqrt{\frac{Gm}{d^3}}\dot{y}+\frac{Gm}{d^3}x\\
+    \ddot{y}&=-\frac{Gm_1}{r_1^3}y-\frac{Gm_2}{r_2^3}y-2\sqrt{\frac{Gm}{d^3}}\dot{x}+\frac{Gm}{d^3}y\\
+    \ddot{z}&=-\frac{Gm_1}{r_1^3}z-\frac{Gm_2}{r_2^3}z
 \end{aligned}}\]
 
 \section*{Nondimensional Equations of Motion}
 We will now begin to non-dimensionalize the EOMs.
 
-First, we will change the time unit. We will pick $t^\star=t\sqrt{\mu/d^3}$ (recall that $\sqrt{\mu/d^3}=\Omega$, which has dimensions of $\text{time}^{-1}$). Everywhere that a derivative is present, it is implied to be with respect to the time unit of 1 second. We must therefore switch from implied $\dd{}{t}$ to implied $\dd{}{t^\star}$.
+First, we will change the time unit. We will pick $t^\star=t\sqrt{Gm/d^3}$ (recall that $\sqrt{Gm/d^3}=\Omega$, which has dimensions of $\text{time}^{-1}$). Everywhere that a derivative is present, it is implied to be with respect to the time unit of 1 second. We must therefore switch from implied $\dd{}{t}$ to implied $\dd{}{t^\star}$.
 
 \[\begin{aligned}
     \dd{(\phantom{x})}{t}&=\dd{(\phantom{x})}{t^\star}\dd{t^\star}{t}\\
-    &=\dd{(\phantom{x})}{t^\star}\sqrt{\frac{\mu}{d^3}}
+    &=\dd{(\phantom{x})}{t^\star}\sqrt{\frac{Gm}{d^3}}
 \end{aligned}\]
 
-From this, it can be seen that to make a derivative with time implied to be with the nondimensional time, $\sqrt{d^3/\mu}$ must be multiplied for each derivative taken. The EOMs can now be rewritten this way, with dots implied to be relative to the nondimensional time unit
+From this, it can be seen that to make a derivative with time implied to be with the nondimensional time, $\sqrt{d^3/Gm}$ must be multiplied for each derivative taken. The EOMs can now be rewritten this way, with dots implied to be relative to the nondimensional time unit
 
 \[\begin{aligned}
-    \left(\dd{^2x}{t^{\star2}}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}(x+x_1)-\frac{\mu_2}{r_2^3}(x-x_2)+2\sqrt{\frac{\mu}{d^3}}\left(\dd{y}{t^\star}\sqrt{\frac{\mu}{d^3}}\right)+\frac{\mu}{d^3}x\\
-    \left(\dd{^2y}{t^{\star2}}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}y-\frac{\mu_2}{r_2^3}y-2\sqrt{\frac{\mu}{d^3}}\left(\dd{x}{t^\star}\sqrt{\frac{\mu}{d^3}}\right)+\frac{\mu}{d^3}y\\
-    \left(\ddot{z}\frac{\mu}{d^3}\right)&=-\frac{\mu_1}{r_1^3}z-\frac{\mu_2}{r_2^3}z
+    \left(\dd{^2x}{t^{\star2}}\frac{Gm}{d^3}\right)&=-\frac{Gm_1}{r_1^3}(x+x_1)-\frac{Gm_2}{r_2^3}(x-x_2)+2\sqrt{\frac{Gm}{d^3}}\left(\dd{y}{t^\star}\sqrt{\frac{Gm}{d^3}}\right)+\frac{Gm}{d^3}x\\
+    \left(\dd{^2y}{t^{\star2}}\frac{Gm}{d^3}\right)&=-\frac{Gm_1}{r_1^3}y-\frac{Gm_2}{r_2^3}y-2\sqrt{\frac{Gm}{d^3}}\left(\dd{x}{t^\star}\sqrt{\frac{Gm}{d^3}}\right)+\frac{Gm}{d^3}y\\
+    \left(\ddot{z}\frac{Gm}{d^3}\right)&=-\frac{Gm_1}{r_1^3}z-\frac{Gm_2}{r_2^3}z
 \end{aligned}\]
 
 Some algebraic simplifications can now be made
@@ -218,24 +219,177 @@ The final set of substitutions will now be made: $m_2=m-m_1 \to m_2^\star=1-m_1^
 
 I will write this with the nondimensionalization implicit instead of explicit. In this space, all parameters represent their nondimensional counterpart.
 
-\[\boxed{\begin{aligned}
+\[\begin{aligned}
     \ddot{x}&=-\frac{m_1}{r_1^3}(x+1-m_1)-\frac{1-m_1}{r_2^3}(x-m_1)+2\dot{y}+x\\
     \ddot{y}&=-\frac{m_1}{r_1^3}y-\frac{1-m_1}{r_2^3}y-2\dot{x}+y\\
     \ddot{z}&=-\frac{m_1}{r_1^3}z-\frac{1-m_1}{r_2^3}z
-\end{aligned}}\]
+\end{aligned}\]
 
-If instead $m_2$ is used as the characterizing parameter (rather than $m_1$), the EOMs are
+If instead $m_2$ is used as the characterizing parameter (rather than $m_1$), the EOMs change slightly. Conventionally, this parameter is written $\mu$ (not to be confused with the gravitational parameter $\mu=G(m_1+m_2)$)
 
 \[\boxed{\begin{aligned}
-    \ddot{x}&=-\frac{1-m_2}{r_1^3}(x+m_2)-\frac{m_2}{r_2^3}(x-1+m_2)+2\dot{y}+x\\
-    \ddot{y}&=-\frac{1-m_2}{r_1^3}y-\frac{m_2}{r_2^3}y-2\dot{x}+y\\
-    \ddot{z}&=-\frac{1-m_2}{r_1^3}z-\frac{m_2}{r_2^3}z
+    \ddot{x}&=-\frac{1-\mu}{r_1^3}(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+2\dot{y}+x\\
+    \ddot{y}&=-\frac{1-\mu}{r_1^3}y-\frac{\mu}{r_2^3}y-2\dot{x}+y\\
+    \ddot{z}&=-\frac{1-\mu}{r_1^3}z-\frac{\mu}{r_2^3}z
+\end{aligned}}\]
+
+Noting that
+\[\boxed{\begin{aligned}
+    r_1&=\sqrt{(x+\mu)^2+y^2+z^2}\\
+    r_2&=\sqrt{(x-1+\mu)^2+y^2+z^2}\\
 \end{aligned}}\]
 
 The solutions to this differential equation solve the non-dimensional CR3BP, in which the bodies' masses add to 1 and the distance between them is 1. To translate it into real solutions, the time scale, distance scale, and mass scale must be applied. Therefore the only thing in this equation that depends upon the speciifc two-body system of interest is $m_1$, or the fraction of the primary mass to the total masses of both planetary.
 
-% \section*{Energy Analysis}
+\section*{Energy Analysis}
 
-% There is a "canonical" way of writing 
+To find the energy of the system, we must find a potential function $U$ for the fictitious centrifugal acceleration $-\Omega^2 \left(x\hat{x}+y\hat{y}\right)=-\frac{Gm}{d^3}\left(x\hat{x}+y\hat{y}\right)$ The potential function that satisfies this is
+\[U=-\frac{1}{2}\frac{Gm}{d^3}\left(x^2+y^2\right)\]
+
+We can analyse the energy of a CR3BP system to determine possible positions. The total energy of the system is.
+
+\[\begin{aligned}
+    E&=\frac{1}{2}v_\text{in CR3BP frame}^2+U_\text{grav}+U_\text{centrifugal}\\
+    &=\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)-\left(\frac{Gm_1}{r_1}+\frac{Gm_2}{r_2}\right)-\frac{1}{2}\frac{Gm}{d^3}\left(x^2+y^2\right)
+\end{aligned}\]
+
+This can be nondimensionalized to
+
+\[\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)-\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)-\frac{1}{2}\left(x^2+y^2\right)\]
+
+This is a conserved quantity. Different sources treat it differently, with some doubling or negating it. In the interest of aligning with JPL's Three Body Periodic Orbits Database, I will double and negate this energy; this value is called the Jacobi constant (or Jacobi integral)
+
+\[J=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)\]
+
+The zero-velocity contours are given by
+
+\[0=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-J\]
+
+Keeping in mind that $r_1$ and $r_2$ are functions of $x, y, z, \mu$. These curves can give some intuition for regions that a spacecraft cannot enter given a quantity of energy.
+
+In the following figures, "colder" colors (towards blue) correspond to lower Jacobi constants, while "warmer" colors (yellows, oranges, and towards red) correspond to higher values. A spacecraft with a given amount of energy is bounded outside of any region encompassed by a colder color. For example, a spacecraft with some amount of energy corresponding to green cannot enter any area with colors cooler than green.
+
+
+\begin{figure}[H]
+    \caption{Level Curves of the Jacobi Constant for $\mu=0.01$}
+    \centering
+    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.01.png}
+\end{figure}
+\begin{figure}[H]
+    \caption{Level Curves of the Jacobi Constant for $\mu=0.1$}
+    \centering
+    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.1.png}
+\end{figure}
+\begin{figure}[H]
+    \caption{Level Curves of the Jacobi Constant for $\mu=0.25$}
+    \centering
+    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.25.png}
+\end{figure}
+\begin{figure}[H]
+    \caption{Level Curves of the Jacobi Constant for $\mu=0.5$}
+    \centering
+    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.5.png}
+\end{figure}
+
+For reference, the Jacobi value for the Earth-Moon system is $\mu\approx0.012$, which is roughly that of the first diagram. Clearly, entering regions near the orbit of the second body is challenging, but exceeding those regions is quite feasible.
+
+\section*{Zero-Velocity Solutions - Lagrange Points}
+
+There are some solutions that can exist with zero velocity (called Lagrange Points). To find these, we simply set the derivatives in the EOMs equal to zero.
+
+\[\begin{aligned}
+    \cancel{\ddot{x}}&=-\frac{1-\mu}{r_1^3}(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+\cancel{2\dot{y}}+x\\
+    \cancel{\ddot{y}}&=-\frac{1-\mu}{r_1^3}y-\frac{\mu}{r_2^3}y-\cancel{2\dot{x}}+y\\
+    \cancel{\ddot{z}}&=-\frac{1-\mu}{r_1^3}z-\frac{\mu}{r_2^3}z
+\end{aligned}\]
+
+Looking at the $z$ EOM, the right-hand-side must have the opposite sign to $z$. Therefore, for the velocity to remain zero, $z=0\forall t$. We will examine the case of $y=0$ and $y\ne0$ separately.
+
+First, we look at $y=0$, which eliminates the second equality above.
+
+\[\begin{aligned}
+    \cancel{\ddot{x}}&=-\frac{1-\mu}{r_1^3}(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+\cancel{2\dot{y}}+x\\
+    0&=-\frac{1-\mu}{\sqrt{(x+\mu)^2}^3}(x+\mu)-\frac{\mu}{\sqrt{(x-1+\mu)^2}^3}(x-1+\mu)+x\\
+    0&=-\frac{1-\mu}{|x+\mu|^3}(x+\mu)-\frac{\mu}{|x-1+\mu|^3}(x-1+\mu)+x
+\end{aligned}\]
+
+This has three solutions, typically called $L_1$ (the solution between the two bodies), $L_2$ (the solution on the far side of the smaller body), and $L_3$ (the solution on the far side of the larger body).
+
+Now, we examine $y\ne0$
+
+\[\begin{aligned}
+    \cancel{\ddot{y}}&=-\frac{1-\mu}{r_1^3}y-\frac{\mu}{r_2^3}y-\cancel{2\dot{x}}+y\\
+    0&=-\frac{1-\mu}{r_1^3}y-\frac{\mu}{r_2^3}y+y\\
+    0&=-\frac{1-\mu}{r_1^3}-\frac{\mu}{r_2^3}+1\\
+    1&=\frac{1-\mu}{r_1^3}+\frac{\mu}{r_2^3}\\
+    \frac{1-\mu}{r_1^3}&=1-\frac{\mu}{r_2^3}\\
+\end{aligned}\]
+Bringing in the equation for $x$,
+\[\begin{aligned}
+    0&=-\frac{1-\mu}{r_1^3}(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+x\\
+    0&=-\left(1-\frac{\mu}{r_2^3}\right)(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+x\\
+    0&=-(x+\mu)+\frac{\mu}{r_2^3}(x+\mu)-\frac{\mu}{r_2^3}(x+\mu)+\frac{\mu}{r_2^3}+x\\
+    0&=-x-\mu+\frac{\mu}{r_2^3}+x\\
+    0&=-\mu+\frac{\mu}{r_2^3}\\
+    \frac{1}{r_2^3}&=1\\
+    r_2&=1
+\end{aligned}\]
+Plugging this back into $\frac{1-\mu}{r_1^3}=1-\frac{\mu}{r_2^3}$,
+\[\begin{aligned}
+    \frac{1-\mu}{r_1^3}&=1-\frac{\mu}{r_2^3}\\
+    \frac{1-\mu}{r_1^3}&=1-\mu\\
+    \frac{1}{r_1^3}&=1\\
+    r_1&=1\\
+\end{aligned}\]
+
+The conditions $r_1=r_2=1$ locate the final two Lagrange points, forming equilateral triangles with the line connecting the two bodies.
+\[\begin{aligned}
+    r_1&=r_2\\
+    \sqrt{(x+\mu)^2+y^2}&=\sqrt{(x-1+\mu)^2+y^2}\\
+    (x+\mu)^2+y^2&=(x-1+\mu)^2+y^2\\
+    (x+\mu)^2&=(x-1+\mu)^2\\
+    x^2+\mu^2+2x\mu&=x^2-2x+2x\mu+1-2\mu+\mu^2\\
+    0&=-2x+1-2\mu\\
+    2x&=1-2\mu\\
+    x&=\frac{1}{2}-\mu\\
+\end{aligned}\]
+Plugging this once again into $r_1=\sqrt{(x+\mu)^2+y^2}=1$,
+\[\begin{aligned}
+    \sqrt{(x+\mu)^2+y^2}&=1\\
+    \left(\frac{1}{2}-\mu+\mu\right)^2+y^2&=1\\
+    \frac{1}{4}+y^2&=1\\
+    y^2&=\frac{3}{4}\\
+    y=\pm\frac{\sqrt{3}}{2}
+\end{aligned}\]
+
+The points $y=\pm\sqrt{3}/2$, $x=\frac{1}{2}-\mu$ locate $L_4$ and $L_5$.
+
+The Lagrange points are shown below for the Earth-Moon system ($\mu=0.01215058560962404$). $L_4$ and $L_5$ are known precisely, while $L_1$, $L_2$, $L_3$ are computed numerically from $y=0$ and $-\frac{1-\mu}{|x+\mu|^3}(x+\mu)-\frac{\mu}{|x-1+\mu|^3}(x-1+\mu)+x=0$.
+
+\begin{figure}[H]
+    \def\muEM{0.01215058560962404}
+    \centering
+    \begin{tikzpicture}[
+        planet/.style = {circle, draw=black, ball color=#1, node contents={}, inner sep = 0.1cm}, 
+        point/.style = {circle, draw=#1, fill=#1, node contents={}, inner sep=0.05cm},
+        >=latex
+        ]
+
+        \node (B1) at (-3*\muEM,0)     [planet=blue, label=below:Earth];
+        \node (B2) at (3-3*\muEM,0)      [planet=gray, label=below:Moon];
+        
+        \draw[dash dot, fill=none, blue](0,0) circle (3*\muEM);
+        \draw[dash dot, fill=none, gray](0,0) circle (3-3*\muEM);
+        
+        \node (L4) at (1.5-3*\muEM,{3*sqrt(3)/2}) [point=black, label=right:$L_4$];
+        \node (L5) at (1.5-3*\muEM,{-3*sqrt(3)/2}) [point=black, label=right:$L_5$];
+        \node (L1) at (3*0.8369151,0) [point=black, label=left:$L_1$];
+        \node (L2) at (3*1.1556822,0) [point=black, label=right:$L_1$];
+        \node (L3) at (3*-1.0050626,0) [point=black, label=left:$L_1$];
+
+    \end{tikzpicture}
+
+    \caption{Earth-Moon Lagrange Points. Note that the barycenter lies within Earth's radius (in the diagram, and in dimensional units)}
+\end{figure}
 
 \end{document}
