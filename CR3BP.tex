@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{framed}
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{tikz-3dplot}
@@ -8,6 +9,7 @@
 \usepackage{comment}
 \usepackage{graphicx}
 \graphicspath{ {./Figures/} }
+
 \usepackage[a4paper, left=3.5cm,right=3.5cm, top=3cm, bottom=3cm]{geometry}
 
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
@@ -259,7 +261,7 @@ This can be nondimensionalized to
 
 This is a conserved quantity. Different sources treat it differently, with some doubling or negating it. In the interest of aligning with JPL's Three Body Periodic Orbits Database, I will double and negate this energy; this value is called the Jacobi constant (or Jacobi integral)
 
-\[J=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)\]
+\[\boxed{J=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)}\]
 
 The zero-velocity contours are given by
 
@@ -267,7 +269,7 @@ The zero-velocity contours are given by
 
 Keeping in mind that $r_1$ and $r_2$ are functions of $x, y, z, \mu$. These curves can give some intuition for regions that a spacecraft cannot enter given a quantity of energy.
 
-In the following figures, "colder" colors (towards blue) correspond to lower Jacobi constants, while "warmer" colors (yellows, oranges, and towards red) correspond to higher values. A spacecraft with a given amount of energy is bounded outside of any region encompassed by a colder color. For example, a spacecraft with some amount of energy corresponding to green cannot enter any area with colors cooler than green.
+In the following figures, "colder" colors (towards blue) correspond to lower Jacobi constants, while "warmer" colors (yellows, oranges, and towards red) correspond to higher values. A spacecraft with a given amount of energy is bounded outside of any region encompassed by a warmer color. For example, a spacecraft with some amount of energy corresponding to green cannot enter any area with colors warmer than green. 
 
 
 \begin{figure}[H]
@@ -291,7 +293,7 @@ In the following figures, "colder" colors (towards blue) correspond to lower Jac
     \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.5.png}
 \end{figure}
 
-For reference, the Jacobi value for the Earth-Moon system is $\mu\approx0.012$, which is roughly that of the first diagram. Clearly, entering regions near the orbit of the second body is challenging, but exceeding those regions is quite feasible.
+For reference, the Jacobi value for the Earth-Moon system is $\mu\approx0.012$, which is roughly that of the first diagram. Clearly, entering regions near the orbit of the second body is challenging, but exceeding those regions is quite feasible if done in the proximity of the secondary body.
 
 \section*{Zero-Velocity Solutions - Lagrange Points}
 
@@ -364,7 +366,23 @@ Plugging this once again into $r_1=\sqrt{(x+\mu)^2+y^2}=1$,
 
 The points $y=\pm\sqrt{3}/2$, $x=\frac{1}{2}-\mu$ locate $L_4$ and $L_5$.
 
-The Lagrange points are shown below for the Earth-Moon system ($\mu=0.01215058560962404$). $L_4$ and $L_5$ are known precisely, while $L_1$, $L_2$, $L_3$ are computed numerically from $y=0$ and $-\frac{1-\mu}{|x+\mu|^3}(x+\mu)-\frac{\mu}{|x-1+\mu|^3}(x-1+\mu)+x=0$.
+The Lagrange points are therefore
+
+\begin{framed}
+\begin{center}
+\begin{tabular}{ c c c }
+     Point & $x$ & $y$ \\
+     $L_1$ & Numeric Solution (see below) & 0\\
+     $L_2$ & Numeric Solution (see below) & 0\\
+     $L_3$ & Numeric Solution (see below) & 0\\
+     $L_4$ & $\frac{1}{2}-\mu$ & $\frac{\sqrt{3}}{2}$ \\
+     $L_5$ & $\frac{1}{2}-\mu$ & $\frac{\sqrt{3}}{2}$
+\end{tabular}
+\end{center}
+\[L_{1,2,3}:\qquad-\frac{1-\mu}{|x_{L1,2,3}+\mu|^3}(x+\mu)-\frac{\mu}{|x-1+\mu|^3}(x-1+\mu)+x=0\]
+\end{framed}
+
+The Lagrange points are shown below for the Earth-Moon system ($\mu=0.01215$) as well as for the Pluto-Charon system ($\mu=0.10828$)0829
 
 \begin{figure}[H]
     \def\muEM{0.01215058560962404}
@@ -389,7 +407,33 @@ The Lagrange points are shown below for the Earth-Moon system ($\mu=0.0121505856
 
     \end{tikzpicture}
 
-    \caption{Earth-Moon Lagrange Points. Note that the barycenter lies within Earth's radius (in the diagram, and in dimensional units)}
+    \caption{Earth-Moon Lagrange Points. Earth-Moon barycenter is within Earth}
+\end{figure}
+
+\begin{figure}[H]
+    \def\muEM{0.10829}
+    \centering
+    \begin{tikzpicture}[
+        planet/.style = {circle, draw=black, ball color=#1, node contents={}, inner sep = 0.1cm}, 
+        point/.style = {circle, draw=#1, fill=#1, node contents={}, inner sep=0.05cm},
+        >=latex
+        ]
+
+        \node (B1) at (-3*\muEM,0)     [planet=orange, label=below:Pluto];
+        \node (B2) at (3-3*\muEM,0)      [planet=brown, label=below:Charon];
+        
+        \draw[dash dot, fill=none, orange](0,0) circle (3*\muEM);
+        \draw[dash dot, fill=none, brown](0,0) circle (3-3*\muEM);
+        
+        \node (L4) at (1.5-3*\muEM,{3*sqrt(3)/2}) [point=black, label=right:$L_4$];
+        \node (L5) at (1.5-3*\muEM,{-3*sqrt(3)/2}) [point=black, label=right:$L_5$];
+        \node (L1) at (3*0.59345355,0) [point=black, label=left:$L_1$];
+        \node (L2) at (3*1.26244918,0) [point=black, label=right:$L_1$];
+        \node (L3) at (3*-1.0450471,0) [point=black, label=left:$L_1$];
+
+    \end{tikzpicture}
+
+    \caption{Pluto-Charon Lagrange Points}
 \end{figure}
 
 \end{document}
