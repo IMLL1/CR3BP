@@ -251,13 +251,13 @@ To find the energy of the system, we must find a potential function $U$ for the 
 We can analyse the energy of a CR3BP system to determine possible positions. The total energy of the system is.
 
 \[\begin{aligned}
-    E&=\frac{1}{2}v_\text{in CR3BP frame}^2+U_\text{grav}+U_\text{centrifugal}\\
+    E&=\frac{1}{2}v_\text{in CR3BP frame}^2+\overbrace{U_\text{grav}+U_\text{centrifugal}}^\text{Pseudopotential}\\
     &=\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)-\left(\frac{Gm_1}{r_1}+\frac{Gm_2}{r_2}\right)-\frac{1}{2}\frac{Gm}{d^3}\left(x^2+y^2\right)
 \end{aligned}\]
 
 This can be nondimensionalized to
 
-\[\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)-\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)-\frac{1}{2}\left(x^2+y^2\right)\]
+\[\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)\underbrace{-\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)-\frac{1}{2}\left(x^2+y^2\right)}_\text{Pseudopotential}\]
 
 This is a conserved quantity. Different sources treat it differently, with some doubling or negating it. In the interest of aligning with JPL's Three Body Periodic Orbits Database, I will double and negate this energy; this value is called the Jacobi constant (or Jacobi integral)
 
@@ -265,39 +265,39 @@ This is a conserved quantity. Different sources treat it differently, with some 
 
 The zero-velocity contours are given by
 
-\[0=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-J\]
+\[J=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)=-2U_\text{pseudo}(x,y,z,\mu)\]
 
 Keeping in mind that $r_1$ and $r_2$ are functions of $x, y, z, \mu$. These curves can give some intuition for regions that a spacecraft cannot enter given a quantity of energy.
 
-In the following figures, "colder" colors (towards blue) correspond to lower Jacobi constants, while "warmer" colors (yellows, oranges, and towards red) correspond to higher values. A spacecraft with a given amount of energy is bounded outside of any region encompassed by a warmer color. For example, a spacecraft with some amount of energy corresponding to green cannot enter any area with colors warmer than green. 
+In the following figures, "colder" colors (towards blue) correspond to lower Jacobi constants, while "warmer" colors (yellows, oranges, and towards red) correspond to higher values. A spacecraft with a given amount of energy is bounded outside of any region encompassed by a warmer color. For example, a spacecraft with some amount of energy corresponding to green cannot enter any area with colors warmer than green. Put another way, colder colors are lower on the pseudopotential surface than are warmer colors. 
 
 
 \begin{figure}[H]
-    \caption{Level Curves of the Jacobi Constant for $\mu=0.01$}
+    \caption{Level Curves of the pseudopotential for $\mu=0.01$}
     \centering
-    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.01.png}
+    \includegraphics[width=0.4\textwidth]{level_curves/potential0.01.png}
 \end{figure}
 \begin{figure}[H]
-    \caption{Level Curves of the Jacobi Constant for $\mu=0.1$}
+    \caption{Level Curves of the pseudopotential for $\mu=0.1$}
     \centering
-    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.1.png}
+    \includegraphics[width=0.4\textwidth]{level_curves/potential0.1.png}
 \end{figure}
 \begin{figure}[H]
-    \caption{Level Curves of the Jacobi Constant for $\mu=0.25$}
+    \caption{Level Curves of the pseudopotential for $\mu=0.25$}
     \centering
-    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.25.png}
+    \includegraphics[width=0.4\textwidth]{level_curves/potential0.25.png}
 \end{figure}
 \begin{figure}[H]
-    \caption{Level Curves of the Jacobi Constant for $\mu=0.5$}
+    \caption{Level Curves of the pseudopotential for $\mu=0.5$}
     \centering
-    \includegraphics[width=0.4\textwidth]{level_curves/jacobi0.5.png}
+    \includegraphics[width=0.4\textwidth]{level_curves/potential0.5.png}
 \end{figure}
 
-For reference, the Jacobi value for the Earth-Moon system is $\mu\approx0.012$, which is roughly that of the first diagram. Clearly, entering regions near the orbit of the second body is challenging, but exceeding those regions is quite feasible if done in the proximity of the secondary body.
+For reference, the mass ratio value $\mu$ for the Earth-Moon system is $\mu\approx0.012$, which is roughly that of the first diagram. Clearly, entering regions near the orbit of the second body is challenging, but exceeding those regions is quite feasible if done in the proximity of the secondary body.
 
 \section*{Zero-Velocity Solutions - Lagrange Points}
 
-There are some solutions that can exist with zero velocity (called Lagrange Points). To find these, we simply set the derivatives in the EOMs equal to zero.
+There are some solutions for which the velocity is zero for all times, called Lagrange Points or libration points. To find these, we simply set the derivatives in the EOMs equal to zero.
 
 \[\begin{aligned}
     \cancel{\ddot{x}}&=-\frac{1-\mu}{r_1^3}(x+\mu)-\frac{\mu}{r_2^3}(x-1+\mu)+\cancel{2\dot{y}}+x\\
