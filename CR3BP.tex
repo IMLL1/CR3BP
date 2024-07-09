@@ -136,6 +136,14 @@ For the satellite's position in the CR3BP frame $\vv{r}=x\vh{x}+y\vh{y}+z\vh{z}$
 
 \[\boxed{\vv{\ddot{r}}=\left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}}\]
 
+Or, rewritten,
+\[\begin{aligned}
+    \vv{\ddot{r}} & = \left(\ddot{x}-2\Omega\dot{y}-\Omega^2 x\right)\vh{x} + \left(\ddot{y}+2\Omega\dot{x}-\Omega^2 y\right)\vh{y}+\ddot{z}\vh{z}\\
+    \vv{\ddot{r}} & = \left(\ddot{x}\vh{x}+\ddot{y}\vh{y}+\ddot{z}\vh{z}\right) - \Omega^2\left(x\vh{x}+y\vh{y}\right)-2\Omega\dot{y}\vh{x} + 2\Omega\dot{x}\vh{y}\\
+    \vv{\ddot{r}} & = \vv{a^c} - \Omega^2\vv{r_{xy}} + 2\vv{\Omega}\times\vv{v^c}\\
+\end{aligned}\]
+
+\[\boxed{\vv{\ddot{r}} = \underbrace{\vv{a^c}}_\text{Relative Acceleration} + \overbrace{- \Omega^2\vv{r_{xy}}}^\text{Centripedal Acceleration} + \underbrace{2\vv{\Omega}\times\vv{v^c}}_\text{Coriolis Acceleration}}\]
 \section*{Equations of Motion}
 We can now generate the equations of motion
 
@@ -435,5 +443,21 @@ The Lagrange points are shown below for the Earth-Moon system ($\mu=0.01215$) as
 
     \caption{Pluto-Charon Lagrange Points}
 \end{figure}
+
+\section*{CR3BP Canonical Dynamics}
+
+Now that you are familiar with the governing equations of CR3BP dynamics, canonical behavior can be explored. First, a qualitative note:
+
+\begin{framed}
+Motion in the rotating frame acts as "feels" natural under gravitational influence, except for two effects.
+\begin{enumerate}
+    \item Centripedal acceleration causes objects to accelerate outward proportionally to their distance from the barycenter.
+    \item The Coriolis acceleration causes objects to curve counterclockwise (when viewed from above) proportionally to their velocity.
+\end{enumerate}
+\end{framed}
+
+With what little intuition that can be established having been addressed, canonical families of orbits in the CR3BP can be examined.
+
+In Keplerian mechanics, the space of all possible orbits is five-dimensional (uniquely determined by semimajor axis, inclination, eccentricity, right ascension of ascending node, and and argument of periapsis) with few degenerate cases (such as circular or equatorial orbits) that remove dimensions. Furthermore, all initical conditions in Keplerian dynamics lead to periodic solutions. These are  not the case of CR3BP dynamics. The constraint of periodicity enforces many requirements on initial conditions, leading to a single-dimensional continuum of periodic orbits where any exist at all. Conventionally, these orbits are broken into a few different "families".
 
 \end{document}
