@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{indentfirst}
 \usepackage{framed}
 \usepackage{amsmath}
 \usepackage{tikz}
@@ -10,14 +11,28 @@
 \usepackage{graphicx}
 \graphicspath{ {./Figures/} }
 
+\usepackage[pdfencoding=auto, psdextra]{hyperref}
+\hypersetup{
+    colorlinks = true, %Colours links instead of ugly boxes
+    urlcolor = blue, %Colour for external hyperlinks
+    linkcolor = blue, %Colour of internal links
+}
+
 \usepackage[a4paper, left=3.5cm,right=3.5cm, top=3cm, bottom=3cm]{geometry}
 
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
 \newcommand{\vv}[1]{\boldsymbol{#1}}
 \newcommand{\vh}[1]{\boldsymbol{\hat{#1}}}
 
-\pagestyle{empty}
+
+\title{Multibody Dynamics Primer}
+\author{Polaris}
+\date{}
+
 \begin{document}
+\maketitle
+
+\pagebreak
 
 % \section*{Diagrams}
 The circular restricted three body problem (CR3BP) is a special case of the three body problem. In the CR3BP (much like in Keplerian 2-body dynamics), we neglect the mass of satellite $S$, while treating the larger celestial body $m_1$ and smaller celestial body $m_2$ as point masses. Crucially, these bodies must orbit one another in circular orbits. In other words, they both orbit about their inertially fixed barycenter $c$ \textit{at constant velocity and distance}.
@@ -267,7 +282,7 @@ This can be nondimensionalized to
 
 \[\frac{1}{2}\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)\underbrace{-\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)-\frac{1}{2}\left(x^2+y^2\right)}_\text{Pseudopotential}\]
 
-This is a conserved quantity. Different sources treat it differently, with some doubling or negating it. In the interest of aligning with JPL's Three Body Periodic Orbits Database, I will double and negate this energy; this value is called the Jacobi constant (or Jacobi integral)
+This is a conserved quantity. Different sources treat it differently, with some doubling or negating it. In the interest of aligning with JPL's Three Body Periodic Orbits Database \cite{jpl_three_body}, I will double and negate this energy; this value is called the Jacobi constant (or Jacobi integral)
 
 \[\boxed{J=2\left(\frac{1-\mu}{r_1}+\frac{\mu}{r_2}\right)+\left(x^2+y^2\right)-\left(\dot{x}^2+\dot{y}^2+\dot{z}^2\right)}\]
 
@@ -459,5 +474,11 @@ Motion in the rotating frame acts as "feels" natural under gravitational influen
 With what little intuition that can be established having been addressed, canonical families of orbits in the CR3BP can be examined.
 
 In Keplerian mechanics, the space of all possible orbits is five-dimensional (uniquely determined by semimajor axis, inclination, eccentricity, right ascension of ascending node, and and argument of periapsis) with few degenerate cases (such as circular or equatorial orbits) that remove dimensions. Furthermore, all initical conditions in Keplerian dynamics lead to periodic solutions. These are  not the case of CR3BP dynamics. The constraint of periodicity enforces many requirements on initial conditions, leading to a single-dimensional continuum of periodic orbits where any exist at all. Conventionally, these orbits are broken into a few different "families".
+
+\newpage
+Note that I consulted many references during the making of this. Where applicable, specific references are cited.
+\nocite{*}
+\bibliographystyle{IEEEtran} % We choose the "plain" reference style
+\bibliography{refs} % Entries are in the refs.bib file
 
 \end{document}
