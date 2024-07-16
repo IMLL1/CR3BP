@@ -55,7 +55,7 @@ for n, varName in enumerate(slider_vars):
     slider_axes.append(slider_ax)
     slider_obj = Slider(ax=slider_axes[-1],
                         label="$"+label_firstletter+"_{"+label_rest+"}$",
-                        valmin=-1, valmax=1, valinit=globals()[varName],
+                        valmin=-1.25, valmax=1.25, valinit=globals()[varName],
                         orientation="vertical", color=[.3,.3,.3], track_color=[.1,.1,.1])
     slider_objs.append(slider_obj)
 
@@ -83,83 +83,42 @@ zoomout_btn = Button(zoomout_ax, 'Coarser', hovercolor='0.975', color='0.25')
 reset_ax = fig.add_axes([0.7, 0.7, 0.06, 0.04])
 reset_btn = Button(reset_ax, 'Reset', hovercolor='0.975', color='0.25')
 
-
-def reset(event):
-    for num in range(len(slider_objs)):
-        slider_ax = fig.add_axes([1-margin-(num_sliders-num-1)*slider_spacing, 0.1, 0.01, 0.85])
-        slider_objs[num].ax.remove()
-        slider_obj = Slider(ax=slider_ax,
-                            label=slider_objs[num].label._text,
-                            valmin=-1.25, valmax=1.25, valinit=globals()[slider_vars[num]],
-                            orientation=slider_objs[num].orientation,
-                            track_color=slider_objs[num].track._facecolor,
-                            color=slider_objs[num].poly._facecolor)
-        slider_objs[num] = slider_obj
-        for slider in [*slider_objs, tf_slider]:
-            slider.on_changed(update)
-reset_btn.on_clicked(reset)
-
-def center(event):
+def make_sliders(zoom=None):
     for num in range(len(slider_objs)):
         old_valmin = slider_objs[num].valmin
         old_valmax = slider_objs[num].valmax
         curr_val = slider_objs[num].val
         val_range = old_valmax-old_valmin
-        new_valmax = curr_val + 0.5*val_range
-        new_valmin = curr_val - 0.5*val_range
-        slider_objs[num].ax.remove()
+        new_valmax = (curr_val + zoom*val_range) if zoom is not None else 1.25
+        new_valmin = (curr_val - zoom*val_range) if zoom is not None else -1.25
+        new_valinit = curr_val if zoom is not None else globals()[slider_vars[num]]
+        
         slider_ax = fig.add_axes([1-margin-(num_sliders-num-1)*slider_spacing, 0.1, 0.01, 0.85])
+        slider_objs[num].ax.remove()
         slider_obj = Slider(ax=slider_ax,
                             label=slider_objs[num].label._text,
-                            valmin=new_valmin, valmax=new_valmax, valinit=curr_val,
+                            valmin=new_valmin, valmax=new_valmax, valinit=new_valinit,
                             orientation=slider_objs[num].orientation,
                             track_color=slider_objs[num].track._facecolor,
                             color=slider_objs[num].poly._facecolor)
         slider_objs[num] = slider_obj
         for slider in [*slider_objs, tf_slider]:
             slider.on_changed(update)
+
+def reset(event):
+    make_sliders()
+reset_btn.on_clicked(reset)
+
+def center(event):
+    make_sliders(zoom=1)
 center_btn.on_clicked(center)
 
 def zoomin(event):
-    for num in range(len(slider_objs)):
-        old_valmin = slider_objs[num].valmin
-        old_valmax = slider_objs[num].valmax
-        curr_val = slider_objs[num].val
-        val_range = 0.5*(old_valmax-old_valmin)
-        new_valmax = curr_val + 0.5*val_range
-        new_valmin = curr_val - 0.5*val_range
-        slider_objs[num].ax.remove()
-        slider_ax = fig.add_axes([1-margin-(num_sliders-num-1)*slider_spacing, 0.1, 0.01, 0.85])
-        slider_obj = Slider(ax=slider_ax,
-                            label=slider_objs[num].label._text,
-                            valmin=new_valmin, valmax=new_valmax, valinit=curr_val,
-                            orientation=slider_objs[num].orientation,
-                            track_color=slider_objs[num].track._facecolor,
-                            color=slider_objs[num].poly._facecolor)
-        slider_objs[num] = slider_obj
-        for slider in [*slider_objs, tf_slider]:
-            slider.on_changed(update)
+    make_sliders(zoom=0.5)
 zoomin_btn.on_clicked(zoomin)
 
 def zoomout(event):
-    for num in range(len(slider_objs)):
-        old_valmin = slider_objs[num].valmin
-        old_valmax = slider_objs[num].valmax
-        curr_val = slider_objs[num].val
-        val_range = 0.5*(old_valmax-old_valmin)
-        new_valmax = curr_val + 0.5*val_range
-        new_valmin = curr_val - 0.5*val_range
-        slider_objs[num].ax.remove()
-        slider_ax = fig.add_axes([1-margin-(num_sliders-num-1)*slider_spacing, 0.1, 0.01, 0.85])
-        slider_obj = Slider(ax=slider_ax,
-                            label=slider_objs[num].label._text,
-                            valmin=new_valmin, valmax=new_valmax, valinit=curr_val,
-                            orientation=slider_objs[num].orientation,
-                            track_color=slider_objs[num].track._facecolor,
-                            color=slider_objs[num].poly._facecolor)
-        slider_objs[num] = slider_obj
-        for slider in [*slider_objs, tf_slider]:
-            slider.on_changed(update)
+    make_sliders(zoom=2)
 zoomout_btn.on_clicked(zoomout)
 
 # adjust the main plot to make room for the sliders
