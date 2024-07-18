@@ -23,16 +23,17 @@ x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
-line = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1.5)
-line = line[0]
+
+bodies = ax.plot([obj.mu, 1 - obj.mu], [0, 0], "bo", markersize=4)
+lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2)
+
+traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1.5)
+traj = traj[0]
+
+plt.axis("equal")
 ax.set_xlabel("x [LU]")
 ax.set_ylabel("y [LU]")
 ax.set_zlabel("z [LU]")
-ax.plot([obj.mu, 1 - obj.mu], [0, 0], "bo", markersize=4)
-ax.plot(obj.L_points[0, :], obj.L_points[1, :], "ko", markersize=2)
-ax.set_title("Trajectory")
-plt.grid(linestyle="dashed", c="gray", lw=1)
-plt.axis("equal")
 
 
 tf_axis = fig.add_axes([0.05, 0.1, 0.01, 0.85])
@@ -63,7 +64,7 @@ for n, varName in enumerate(slider_vars):
 # The function to be called anytime a slider's value changes
 def update(val):
     states = f(tf_slider.val, *[slider.val for slider in slider_objs])
-    line.set_data_3d(states[:, 0], states[:, 1], states[:, 2])
+    traj.set_data_3d(states[:, 0], states[:, 1], states[:, 2])
     fig.canvas.draw_idle()
 
 # register the update function with each slider
@@ -114,13 +115,13 @@ def center(event):
 center_btn.on_clicked(center)
 
 def zoomin(event):
-    make_sliders(zoom=0.5)
+    make_sliders(zoom=0.25)
 zoomin_btn.on_clicked(zoomin)
 
 def zoomout(event):
-    make_sliders(zoom=2)
+    make_sliders(zoom=4)
 zoomout_btn.on_clicked(zoomout)
 
 # adjust the main plot to make room for the sliders
-fig.subplots_adjust(right=.6, left=0.075)
+fig.subplots_adjust(right=.75, left=0.075, bottom=0.025, top=0.975)
 plt.show()
