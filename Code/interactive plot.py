@@ -124,11 +124,11 @@ def center(event):
 center_btn.on_clicked(center)
 
 def zoomin(event):
-    make_sliders(zoom=0.25)
+    make_sliders(zoom=0.1)
 zoomin_btn.on_clicked(zoomin)
 
 def zoomout(event):
-    make_sliders(zoom=4)
+    make_sliders(zoom=10)
 zoomout_btn.on_clicked(zoomout)
 
 # adjust the main plot to make room for the sliders
