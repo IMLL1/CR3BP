@@ -4,7 +4,7 @@ Some inspiration taken from NASA Johnson Space Center's Copernicus: https://www.
 """
 
 from scipy.integrate import solve_ivp
-from scipy.optimize import newton
+from scipy.optimize import newton, minimize
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -140,4 +140,30 @@ class CR3BP:
         plt.grid(linestyle="dashed", lw=0.5, c="gray")
         plt.show()
 
-    # TODO: add find_periodic
+    def find_periodic_orbit(self,
+                            fixed_ic="x",
+                            opt_zero=["vx", "y"],
+                            init_guess=[2.77, 0.82285, 0, 0.05, 0, 0.17, 0]):
+        func_inputs = {"tf":0, "x": 1, "y": 2, "z": 3, "vx": 4, "vy": 5, "vz": 6}
+        def minFunc(inputs):
+            states_in = inputs
+            
+            # insert non-optimization variables
+            states_in = np.insert(states_in, func_inputs[fixed_ic], init_guess[func_inputs[fixed_ic]])
+            # prevent time from going to zero (bad optimization)
+            if states_in[0] < 0.5*init_guess[0]: states_in[0] = 0.5*init_guess[0]
+            
+            _, states = self.propagate_orbit(states_in[1:], states_in[0])
+            state_fin = states[-1,:]
+            
+            # get objective states and their norm
+            obj_states = np.array([state_fin[func_inputs[var]-1] for var in opt_zero])
+            obj_func = np.linalg.norm(obj_states)
+            return obj_func
+
+        # init input is init guess for non-set variables
+        init_input = [init_guess[func_inputs[var]] for var in func_inputs.keys() if var != fixed_ic]
+        min_object = minimize(minFunc, init_input, method = 'Nelder-Mead')
+        minimizing_guess=min_object.x
+        optimal_state = np.insert(minimizing_guess, func_inputs[fixed_ic], init_guess[func_inputs[fixed_ic]])
+        return optimal_state

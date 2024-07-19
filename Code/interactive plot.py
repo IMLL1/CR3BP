@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 
 import numpy as np
-from scipy.integrate import solve_ivp
-from scipy.optimize import newton
 from CR3BP import CR3BP
 
 plt.style.use("dark_background")
@@ -19,6 +17,8 @@ def f(tf, x0, y0, z0, vx0, vy0, vz0):
 
 # Define initial parameters
 x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
+x0 = 0.82285
+tf, y0, z0, vx0, vy0, vz0 = [2.77187864e+00, 2.51552479e-06, 4.99596289e-02, 1.06988614e-05, 1.69963711e-01, 2.26552772e-05]
 
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
@@ -35,7 +35,7 @@ ax_spokes = [ax.plot([0,1.5*np.cos(ringTheta)],[0,1.5*np.sin(ringTheta)], color=
 bodies = ax.plot([obj.mu, 1 - obj.mu], [0, 0], "co", markersize=4)
 lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2)
 
-traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1.5)
+traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1)
 traj = traj[0]
 
 plt.axis("equal")
@@ -81,6 +81,9 @@ for slider in [*slider_objs, tf_slider]:
     slider.on_changed(update)
 
 # buttons
+periodic_ax = fig.add_axes([0.7, 0.25, 0.06, 0.04])
+periodic_btn = Button(periodic_ax, 'Close Orbit', hovercolor='0.975', color='0.25')
+
 center_ax = fig.add_axes([0.7, 0.4, 0.06, 0.04])
 center_btn = Button(center_ax, 'Center', hovercolor='0.975', color='0.25')
 
@@ -130,6 +133,21 @@ zoomin_btn.on_clicked(zoomin)
 def zoomout(event):
     make_sliders(zoom=10)
 zoomout_btn.on_clicked(zoomout)
+
+def make_periodic(event):
+    curr_state = [tf_slider.val, *[slider.val for slider in slider_objs]]
+    new_state = obj.find_periodic_orbit(fixed_ic="x", opt_zero=["vx","y"], init_guess=curr_state)
+    
+    for n, slider in enumerate([tf_slider, *slider_objs]):
+        # eventson = False so that there isn't an infinite loop
+        for slider2 in [tf_slider, *slider_objs]:
+            if slider2 != slider: slider2.eventson = False
+        slider.set_val(new_state[n])
+        for slider2 in [tf_slider, *slider_objs]:
+            if slider2 != slider: slider2.eventson = True
+    
+periodic_btn.on_clicked(make_periodic)
+
 
 # adjust the main plot to make room for the sliders
 fig.subplots_adjust(right=.75, left=0.075, bottom=0.025, top=0.975)
