@@ -17,8 +17,8 @@ def f(tf, x0, y0, z0, vx0, vy0, vz0):
 
 # Define initial parameters
 x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
-x0 = 0.82285
-tf, y0, z0, vx0, vy0, vz0 = [2.77187864e+00, 2.51552479e-06, 4.99596289e-02, 1.06988614e-05, 1.69963711e-01, 2.26552772e-05]
+# x0 = 0.82285
+# tf, y0, z0, vx0, vy0, vz0 = [2.77187864e+00, 2.51552479e-06, 4.99596289e-02, 1.06988614e-05, 1.69963711e-01, 2.26552772e-05]
 
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
