@@ -23,17 +23,26 @@ x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
+xyz_axes = ax.quiver([0,0,0], [0,0,0], [0,0,0], [1,0,0], [0,1,0], [0,0,1], label=["x","y","z"], length=0.15, normalize=True, color='lightgrey', linewidth=0.5)
 
-bodies = ax.plot([obj.mu, 1 - obj.mu], [0, 0], "bo", markersize=4)
+surfR, surfTheta = np.meshgrid(np.linspace(0,1.5,2), np.linspace(0,2*np.pi,500))
+xy_plane = ax.plot_surface(surfR*np.cos(surfTheta), surfR*np.sin(surfTheta), 0*surfR, linewidth=0, facecolor=[0.25,0.25,0.25,0.5])
+ringTheta = np.linspace(0,2*np.pi,500)
+ax_rings = [ax.plot(ringR*np.cos(ringTheta),ringR*np.sin(ringTheta), color=[.75,.75,.75,.75], linewidth=0.5) for ringR in [.25, .5, .75, 1, 1.25, 1.5]]
+ax_spokes = [ax.plot([0,1.5*np.cos(ringTheta)],[0,1.5*np.sin(ringTheta)], color=[.75,.75,.75,.75], linewidth=0.5) for ringTheta in np.arange(0,2*np.pi,np.pi/3)]
+
+
+bodies = ax.plot([obj.mu, 1 - obj.mu], [0, 0], "co", markersize=4)
 lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2)
 
 traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1.5)
 traj = traj[0]
 
 plt.axis("equal")
-ax.set_xlabel("x [LU]")
-ax.set_ylabel("y [LU]")
-ax.set_zlabel("z [LU]")
+# ax.set_xlabel("x [LU]")
+# ax.set_ylabel("y [LU]")
+# ax.set_zlabel("z [LU]")
+ax.set_axis_off()
 
 
 tf_axis = fig.add_axes([0.05, 0.1, 0.01, 0.85])

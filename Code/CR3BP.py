@@ -1,5 +1,6 @@
 """
 Adapted from Alfonso Gonzalez's class at https://github.com/alfonsogonzalez/AWP
+Some inspiration taken from NASA Johnson Space Center's Copernicus: https://www.nasa.gov/general/copernicus/
 """
 
 from scipy.integrate import solve_ivp
@@ -138,3 +139,5 @@ class CR3BP:
         plt.title("Pseudopotential")
         plt.grid(linestyle="dashed", lw=0.5, c="gray")
         plt.show()
+
+    # TODO: add find_periodic
