@@ -41,7 +41,7 @@ ax.set_axis_off()
 
 
 bodies = ax.plot([-obj.mu, 1 - obj.mu], [0, 0], "co", markersize=4)
-lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2)
+lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2, visible=False)
 
 traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1)
 
