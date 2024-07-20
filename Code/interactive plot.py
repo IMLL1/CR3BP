@@ -8,17 +8,19 @@ plt.style.use("dark_background")
 
 obj = CR3BP()
 
+# TODO:
+# - Time coarse/fine buttons
+# - Toggle Lagrange points
+# - Toggle UI type
 
 # The parametrized function to be plotted
 def f(tf, x0, y0, z0, vx0, vy0, vz0):
     t, states = obj.propagate_orbit([x0, y0, z0, vx0, vy0, vz0], tf)
     return states[:, :3]
 
-
 # Define initial parameters
 x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
-# x0 = 0.82285
-# tf, y0, z0, vx0, vy0, vz0 = [2.77187864e+00, 2.51552479e-06, 4.99596289e-02, 1.06988614e-05, 1.69963711e-01, 2.26552772e-05]
+tf, x0, y0, z0, vx0, vy0, vz0 = [2.77, 0.82285, 0, 0.05, 0, 0.17, 0]
 
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
@@ -136,7 +138,7 @@ zoomout_btn.on_clicked(zoomout)
 
 def make_periodic(event):
     curr_state = [tf_slider.val, *[slider.val for slider in slider_objs]]
-    new_state = obj.find_periodic_orbit(fixed_ic="x", opt_zero=["vx","y"], init_guess=curr_state)
+    new_state = obj.find_periodic_orbit(opt_vars=["tf", "z", "vy"], obj_zero=["vx", "y"], init_guess=curr_state, tol=1e-10)
     
     for n, slider in enumerate([tf_slider, *slider_objs]):
         # eventson = False so that there isn't an infinite loop
@@ -147,7 +149,6 @@ def make_periodic(event):
             if slider2 != slider: slider2.eventson = True
     
 periodic_btn.on_clicked(make_periodic)
-
 
 # adjust the main plot to make room for the sliders
 fig.subplots_adjust(right=.75, left=0.075, bottom=0.025, top=0.975)

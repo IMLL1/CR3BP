@@ -7,6 +7,7 @@ from scipy.integrate import solve_ivp
 from scipy.optimize import newton, minimize
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 class CR3BP:
@@ -140,16 +141,22 @@ class CR3BP:
         plt.grid(linestyle="dashed", lw=0.5, c="gray")
         plt.show()
 
+    # TODO: Tolerance specification, geq and leq constraints, multiple fixed ICs?
     def find_periodic_orbit(self,
-                            fixed_ic="x",
-                            opt_zero=["vx", "y"],
-                            init_guess=[2.77, 0.82285, 0, 0.05, 0, 0.17, 0]):
-        func_inputs = {"tf":0, "x": 1, "y": 2, "z": 3, "vx": 4, "vy": 5, "vz": 6}
+                            opt_vars=["tf", "z", "vy"],
+                            obj_zero=["vx", "y"],
+                            init_guess=[2.77, 0.82285, 0, 0.05, 0, 0.17, 0],
+                            tol=None):
+        func_inputs = pd.Series({"tf":0, "x": 1, "y": 2, "z": 3, "vx": 4, "vy": 5, "vz": 6})
+        fixed_vars = list(func_inputs.drop(index=opt_vars).keys())
+        init_guess = np.array(init_guess)
+        opt_paramnums = list(func_inputs[opt_vars].values)
         def minFunc(inputs):
-            states_in = inputs
+            states_in = np.zeros(7)
             
             # insert non-optimization variables
-            states_in = np.insert(states_in, func_inputs[fixed_ic], init_guess[func_inputs[fixed_ic]])
+            states_in[func_inputs[fixed_vars]] = init_guess[func_inputs[fixed_vars]]
+            states_in[func_inputs[opt_vars]] = inputs
             # prevent time from going to zero (bad optimization)
             if states_in[0] < 0.5*init_guess[0]: states_in[0] = 0.5*init_guess[0]
             
@@ -157,13 +164,15 @@ class CR3BP:
             state_fin = states[-1,:]
             
             # get objective states and their norm
-            obj_states = np.array([state_fin[func_inputs[var]-1] for var in opt_zero])
+            obj_states = np.array(state_fin[func_inputs[obj_zero]-1])
             obj_func = np.linalg.norm(obj_states)
             return obj_func
 
         # init input is init guess for non-set variables
-        init_input = [init_guess[func_inputs[var]] for var in func_inputs.keys() if var != fixed_ic]
-        min_object = minimize(minFunc, init_input, method = 'Nelder-Mead')
+        init_input = init_guess[opt_paramnums]
+        min_object = minimize(minFunc, init_input, method = 'Nelder-Mead', tol=tol)
         minimizing_guess=min_object.x
-        optimal_state = np.insert(minimizing_guess, func_inputs[fixed_ic], init_guess[func_inputs[fixed_ic]])
+        optimal_state = np.zeros(7)
+        optimal_state[func_inputs[fixed_vars]] = init_guess[func_inputs[fixed_vars]]
+        optimal_state[func_inputs[opt_vars]] = minimizing_guess
         return optimal_state
