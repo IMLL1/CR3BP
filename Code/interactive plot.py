@@ -10,8 +10,6 @@ obj = CR3BP()
 
 # TODO:
 # - Time coarse/fine buttons
-# - Toggle Lagrange points
-# - Toggle UI type
 
 # The parametrized function to be plotted
 def f(tf, x0, y0, z0, vx0, vy0, vz0):
@@ -20,7 +18,6 @@ def f(tf, x0, y0, z0, vx0, vy0, vz0):
 
 # Define initial parameters
 x0 = 0.75; y0 = 0; z0 = 0; vx0 = 0; vy0 = 0.5; vz0 = 0; tf = 5
-tf, x0, y0, z0, vx0, vy0, vz0 = [2.77, 0.82285, 0, 0.05, 0, 0.17, 0]
 
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
@@ -32,20 +29,23 @@ xy_plane = ax.plot_surface(surfR*np.cos(surfTheta), surfR*np.sin(surfTheta), 0*s
 ringTheta = np.linspace(0,2*np.pi,500)
 ax_rings = [ax.plot(ringR*np.cos(ringTheta),ringR*np.sin(ringTheta), color=[.75,.75,.75,.75], linewidth=0.5) for ringR in [.25, .5, .75, 1, 1.25, 1.5]]
 ax_spokes = [ax.plot([0,1.5*np.cos(ringTheta)],[0,1.5*np.sin(ringTheta)], color=[.75,.75,.75,.75], linewidth=0.5) for ringTheta in np.arange(0,2*np.pi,np.pi/3)]
+ax.set_xlabel("x [LU]")
+ax.set_ylabel("y [LU]")
+ax.set_zlabel("z [LU]")
+for n, axis in enumerate([ax.yaxis, ax.zaxis, ax.xaxis]):
+    axis.pane.set_facecolor([0.3+n/40,0.3+n/40,0.3+n/40,0.5])
+        # the +n/40 is to match the color differences in original xyz panes
+    axis.pane.set_edgecolor([0.75,0.75,0.75,0.5])
+    axis.gridlines.set_alpha(0.25)
+ax.set_axis_off()
 
 
-bodies = ax.plot([obj.mu, 1 - obj.mu], [0, 0], "co", markersize=4)
+bodies = ax.plot([-obj.mu, 1 - obj.mu], [0, 0], "co", markersize=4)
 lagrange_points = ax.plot(obj.L_points[0, :], obj.L_points[1, :], "wo", markersize=2)
 
 traj = ax.plot(*f(tf, x0, y0, z0, vx0, vy0, vz0).T, "r", lw=1)
-traj = traj[0]
 
 plt.axis("equal")
-# ax.set_xlabel("x [LU]")
-# ax.set_ylabel("y [LU]")
-# ax.set_zlabel("z [LU]")
-ax.set_axis_off()
-
 
 tf_axis = fig.add_axes([0.05, 0.1, 0.01, 0.85])
 tf_slider = Slider(ax=tf_axis, label="$t_f$", valmin=0, valmax=15, valinit=tf, orientation="vertical", color=[.3,.3,.3], track_color=[.1,.1,.1])
@@ -75,7 +75,7 @@ for n, varName in enumerate(slider_vars):
 # The function to be called anytime a slider's value changes
 def update(val):
     states = f(tf_slider.val, *[slider.val for slider in slider_objs])
-    traj.set_data_3d(states[:, 0], states[:, 1], states[:, 2])
+    traj[0].set_data_3d(states[:, 0], states[:, 1], states[:, 2])
     fig.canvas.draw_idle()
 
 # register the update function with each slider
@@ -98,14 +98,20 @@ zoomout_btn = Button(zoomout_ax, 'Coarser', hovercolor='0.975', color='0.25')
 reset_ax = fig.add_axes([0.7, 0.7, 0.06, 0.04])
 reset_btn = Button(reset_ax, 'Reset', hovercolor='0.975', color='0.25')
 
-def make_sliders(zoom=None):
+axtoggle_ax = fig.add_axes([0.075, 0.6, 0.06, 0.04])
+axtoggle_btn = Button(axtoggle_ax, 'Axes', hovercolor='0.975', color='0.25')
+
+lagrange_ax = fig.add_axes([0.075, 0.4, 0.075, 0.04])
+lagrange_btn = Button(lagrange_ax, 'Lagrange Pts', hovercolor='0.975', color='0.25')
+
+def update_sliders(zoom=None):
     for num in range(len(slider_objs)):
         old_valmin = slider_objs[num].valmin
         old_valmax = slider_objs[num].valmax
         curr_val = slider_objs[num].val
         val_range = old_valmax-old_valmin
-        new_valmax = (curr_val + zoom*val_range) if zoom is not None else 1.25
-        new_valmin = (curr_val - zoom*val_range) if zoom is not None else -1.25
+        new_valmax = (curr_val + zoom*val_range) if zoom is not None else 1
+        new_valmin = (curr_val - zoom*val_range) if zoom is not None else -1
         new_valinit = curr_val if zoom is not None else globals()[slider_vars[num]]
         
         slider_ax = fig.add_axes([1-margin-(num_sliders-num-1)*slider_spacing, 0.1, 0.01, 0.85])
@@ -121,20 +127,44 @@ def make_sliders(zoom=None):
             slider.on_changed(update)
 
 def reset(event):
-    make_sliders()
+    update_sliders()
+    fig.canvas.draw_idle()
 reset_btn.on_clicked(reset)
 
 def center(event):
-    make_sliders(zoom=1)
+    update_sliders(zoom=1)
 center_btn.on_clicked(center)
 
 def zoomin(event):
-    make_sliders(zoom=0.1)
+    update_sliders(zoom=0.1)
 zoomin_btn.on_clicked(zoomin)
 
 def zoomout(event):
-    make_sliders(zoom=10)
+    update_sliders(zoom=10)
 zoomout_btn.on_clicked(zoomout)
+
+def swap_axes(event):
+    if xy_plane.get_visible():
+        xy_plane.set_visible(False)
+        for ring in ax_rings: ring[0].set_visible(False)
+        for spoke in ax_spokes: spoke[0].set_visible(False)
+        xyz_axes.set_visible(False)
+        ax.set_axis_on()
+    else:
+        xy_plane.set_visible(True)
+        for ring in ax_rings: ring[0].set_visible(True)
+        for spoke in ax_spokes: spoke[0].set_visible(True)
+        xyz_axes.set_visible(True)
+        ax.set_axis_off()
+    fig.canvas.draw_idle()
+axtoggle_btn.on_clicked(swap_axes)
+
+
+def toggle_Lpoints(event):
+    lagrange_points[0].set_visible(not lagrange_points[0].get_visible())
+    fig.canvas.draw_idle()
+lagrange_btn.on_clicked(toggle_Lpoints)
+
 
 def make_periodic(event):
     curr_state = [tf_slider.val, *[slider.val for slider in slider_objs]]
@@ -147,7 +177,6 @@ def make_periodic(event):
         slider.set_val(new_state[n])
         for slider2 in [tf_slider, *slider_objs]:
             if slider2 != slider: slider2.eventson = True
-    
 periodic_btn.on_clicked(make_periodic)
 
 # adjust the main plot to make room for the sliders
