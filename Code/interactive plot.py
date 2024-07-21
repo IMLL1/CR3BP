@@ -118,11 +118,6 @@ optvar_btns = CheckButtons(
     frame_props={'edgecolor': 'w'},
     check_props={'facecolor': 'w'},
 )
-def toggle_optvar(label):
-    varname = label.split()[0][:-1]
-    if varname in opt_vars: opt_vars.remove(varname)
-    else: opt_vars.append(varname)
-optvar_btns.on_clicked(toggle_optvar)
 
 objzero_ax = fig.add_axes([0.025, 0.2, 0.075, 0.1])
 objzero_btns = CheckButtons(
@@ -133,11 +128,6 @@ objzero_btns = CheckButtons(
     frame_props={'edgecolor': 'w'},
     check_props={'facecolor': 'w'},
 )
-def toggle_objzero(label):
-    varname = label.split("=")[0][:-1]
-    if varname in obj_zero: obj_zero.remove(varname)
-    else: obj_zero.append(varname)
-objzero_btns.on_clicked(toggle_objzero)
 
 # The function to be called anytime a slider's value changes
 def update(val):
@@ -226,6 +216,17 @@ def make_periodic(event):
         for slider2 in slider_objs:
             if slider2 != slider: slider2.eventson = True
 
+def toggle_objzero(label):
+    varname = label.split("=")[0][:-1]
+    if varname in obj_zero: obj_zero.remove(varname)
+    else: obj_zero.append(varname)
+    
+def toggle_optvar(label):
+    varname = label.split()[0][:-1]
+    if varname in opt_vars: opt_vars.remove(varname)
+    else: opt_vars.append(varname)
+
+
 reset_btn.on_clicked(reset)
 center_btn.on_clicked(center)
 zoomin_btn.on_clicked(zoomin)
@@ -233,6 +234,8 @@ zoomout_btn.on_clicked(zoomout)
 axtoggle_btn.on_clicked(swap_axes)
 lagrange_btn.on_clicked(toggle_Lpoints)
 optimize_btn.on_clicked(make_periodic)
+objzero_btns.on_clicked(toggle_objzero)
+optvar_btns.on_clicked(toggle_optvar)
 for slider in slider_objs:
     slider.on_changed(update)
 
