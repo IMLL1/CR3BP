@@ -105,6 +105,9 @@ label_ax.set_yticks([])
 optimize_ax = fig.add_axes([0.025, 0.16, 0.075, 0.04])
 optimize_btn = Button(optimize_ax, 'Optimize', hovercolor='0.975', color='0.25')
 
+print_ax = fig.add_axes([0.025, 0.1, 0.075, 0.04])
+print_btn = Button(print_ax, 'Print ICs', hovercolor='0.975', color='0.25')
+
 
 obj_zero=["y", "vx", "vz"]
 opt_vars=["tf", "x", "vy"]
@@ -199,10 +202,8 @@ def toggle_Lpoints(event):
     lagrange_points[0].set_visible(not lagrange_points[0].get_visible())
     fig.canvas.draw_idle()
 
-def make_periodic(event):
+def optimize_ics(event):
     curr_state = [slider.val for slider in slider_objs]
-    print(opt_vars)
-    print(obj_zero)
     if len(obj_zero)>0:
         new_state = obj.find_periodic_orbit(opt_vars=opt_vars, obj_zero=obj_zero, init_guess=curr_state, tol=1e-10)
     else:
@@ -215,6 +216,14 @@ def make_periodic(event):
         slider.set_val(new_state[n])
         for slider2 in slider_objs:
             if slider2 != slider: slider2.eventson = True
+    center(None)
+
+
+def print_ics(event):
+    print("\n\n\tInitial Conditions:")
+    for i in range(len(state_vars)):
+        print("%4s: %.16e" % (state_vars[i], slider_objs[i].val))
+
 
 def toggle_objzero(label):
     varname = label.split("=")[0][:-1]
@@ -233,7 +242,8 @@ zoomin_btn.on_clicked(zoomin)
 zoomout_btn.on_clicked(zoomout)
 axtoggle_btn.on_clicked(swap_axes)
 lagrange_btn.on_clicked(toggle_Lpoints)
-optimize_btn.on_clicked(make_periodic)
+optimize_btn.on_clicked(optimize_ics)
+print_btn.on_clicked(print_ics)
 objzero_btns.on_clicked(toggle_objzero)
 optvar_btns.on_clicked(toggle_optvar)
 for slider in slider_objs:
