@@ -61,6 +61,7 @@ for n, varname in enumerate(state_vars):
                         valmin=slider_vals[1], valmax=slider_vals[2], valinit=slider_vals[0],
                         orientation="vertical", track_color=[.25,.25,.25])
     slider_obj.poly.set_visible(False)
+    slider_obj.hline.set_visible(False)
     slider_objs.append(slider_obj)
 
 # buttons
@@ -97,22 +98,18 @@ axtoggle_btn = Button(axtoggle_ax, 'Axes Type', hovercolor='0.975', color='0.25'
 
 # Optimizer
 
-label_ax = fig.add_axes([0.025, 0.4, 0.075, 0.04])
+label_ax = fig.add_axes([0.025, 0.45, 0.075, 0.04])
 label_ax.text(0.5,0.5, "Optimization:",verticalalignment='center', horizontalalignment='center')
 label_ax.set_facecolor([.1,.1,.1,0])
 label_ax.set_xticks([])
 label_ax.set_yticks([])
-optimize_ax = fig.add_axes([0.025, 0.16, 0.075, 0.04])
+optimize_ax = fig.add_axes([0.025, 0.21, 0.075, 0.04])
 optimize_btn = Button(optimize_ax, 'Optimize', hovercolor='0.975', color='0.25')
-
-print_ax = fig.add_axes([0.025, 0.1, 0.075, 0.04])
-print_btn = Button(print_ax, 'Print ICs', hovercolor='0.975', color='0.25')
-
 
 obj_zero=["y", "vx", "vz"]
 opt_vars=["tf", "x", "vy"]
 
-optvar_ax = fig.add_axes([0.025, 0.3, 0.075, 0.1])
+optvar_ax = fig.add_axes([0.025, 0.35, 0.075, 0.1])
 optvar_btns = CheckButtons(
     ax=optvar_ax,
     labels=[var+" free" for var in state_vars[1:]],
@@ -122,7 +119,7 @@ optvar_btns = CheckButtons(
     check_props={'facecolor': 'w'},
 )
 
-objzero_ax = fig.add_axes([0.025, 0.2, 0.075, 0.1])
+objzero_ax = fig.add_axes([0.025, 0.25, 0.075, 0.1])
 objzero_btns = CheckButtons(
     ax=objzero_ax,
     labels=[var[:-1]+"f=0" for var in state_vars[1:]],
@@ -131,6 +128,9 @@ objzero_btns = CheckButtons(
     frame_props={'edgecolor': 'w'},
     check_props={'facecolor': 'w'},
 )
+
+print_ax = fig.add_axes([0.025, 0.14, 0.075, 0.04])
+print_btn = Button(print_ax, 'Print ICs', hovercolor='0.975', color='0.25')
 
 # The function to be called anytime a slider's value changes
 def update(val):
@@ -158,7 +158,6 @@ def update_sliders(zoom=None):
         new_valmax = (curr_val + 0.5*zoom*val_range) if zoom is not None else slider_vals[2]
         new_valmin = (curr_val - 0.5*zoom*val_range) if zoom is not None else slider_vals[1]
         new_valinit = curr_val if zoom is not None else slider_vals[0]
-        
         
         slider.ax.set_ylim(new_valmin,new_valmax)
         slider.valmin = new_valmin
@@ -252,3 +251,4 @@ for slider in slider_objs:
 # adjust the main plot to make room for the sliders
 fig.subplots_adjust(right=.7, left=0.025, bottom=0.025, top=0.975)
 plt.show()
+print("a")
