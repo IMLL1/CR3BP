@@ -4,7 +4,6 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{tikz-3dplot}
-% \usepackage{esvect}
 \usepackage{cancel}
 \usepackage{float}
 \usepackage{comment}
@@ -15,9 +14,9 @@
 \hypersetup{
     colorlinks = true, %Colours links instead of ugly boxes
     urlcolor = blue, %Colour for external hyperlinks
-    linkcolor = blue, %Colour of internal links
+    citecolor = red,
+    linkcolor = red, %Colour of internal links
 }
-
 \usepackage[a4paper, left=3.5cm,right=3.5cm, top=3cm, bottom=3cm]{geometry}
 
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
@@ -474,6 +473,19 @@ Motion in the rotating frame acts as "feels" natural under gravitational influen
 With what little intuition that can be established having been addressed, canonical families of orbits in the CR3BP can be examined.
 
 In Keplerian mechanics, the space of all possible orbits is five-dimensional\footnote[1]{With an orbit being uniquely determined by semimajor axis, inclination, eccentricity, right ascension of ascending node, and and argument of periapsis while argument of periapsis locates the body along its orbit} with few degenerate cases (such as circular or equatorial orbits) that remove dimensions. Furthermore, all initical conditions in Keplerian dynamics lead to periodic solutions\cite{BasicOrbitalDynamics}. This is not the case for CR3BP dynamics. The constraint of periodicity enforces many requirements on initial conditions, leading to a single-dimensional continuum of periodic orbits where any exist at all [Note to author: this should be cited at some point]. Conventionally, these orbits are broken into a few different "families".
+
+Note to the reader: at this point, I have to temporarily stop extending this writup. The most commonly discussed CR3BP orbits are the Halo orbit (including the Near Rectilinear Halo Orbit (NRHO)), Butterfly orbit and Distant Retrograde Orbit (DRO). However, before bifurcation of these trajectories can be discussed, I (the author) must partake in further literature review. My future plans are to
+\begin{enumerate}
+    \item Discuss the distinct features of each orbit family, providing plots of the orbits in that family. \cite{Grebow} will likely be very heavily cited in this section.
+    \item Derive Lissajous orbits, derive stability criteria of linearized system (ideally make a compelling argument that stability of the linearized system $\Leftrightarrow$ stability of nonlinear system)
+    \item Explore possible engineering or scientific use cases for different families
+    \item Describe (and provide plots of) invariant manifolds of L1 and L2
+    \item Discuss how Jacobi constant matters to trajectory
+    \item Investigate transfers between CR3BP trajectories
+    \item Introduce solar perturbation, then frame it as a new source of dynamics. Use this to briefly touch on Bicircular Restricted 4 Body Problem. \cite{mccarthy_quasi-periodic_2022} likely primary jumping off point for this; will explore McCarthy and Howell's citations.
+    \item Mention other sources of perturbation (SRP, gravitational harmonics for NRHO/butterfly)
+\end{enumerate}
+discuss the features and 
 
 \newpage
 Note that I consulted many references during the making of this. Where applicable, specific references are cited.
