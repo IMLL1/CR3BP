@@ -57,7 +57,7 @@ class CR3BP:
         )
         return H
 
-    def get_A(self,state):
+    def get_A(self, state):
         r = state[:3]
         Uxx = self.U_hess(r)
         O = np.zeros((3, 3))
@@ -65,7 +65,7 @@ class CR3BP:
         Omega = np.array([[0, 2, 0], [-2, 0, 0], [0, 0, 0]])
         A = np.block([[O, I], [Uxx, Omega]])
         return A
-    
+
     def get_JC(self, x, y, z, dx=0, dy=0, dz=0):
         JC = 2 * self.pseudopotential(x, y, z)
         JC -= dx**2 + dy**2 + dz**2
@@ -167,41 +167,47 @@ class CR3BP:
         plt.grid(linestyle="dashed", lw=0.5, c="gray")
         plt.show()
 
-    def find_periodic_orbit(self,
-                            opt_vars=["tf", "z", "vy"],
-                            obj_zero=["vx", "y"],
-                            init_guess=[2.77, 0.82285, 0, 0.05, 0, 0.17, 0],
-                            tol=None):
-        func_inputs = pd.Series({"tf":0, "x": 1, "y": 2, "z": 3, "vx": 4, "vy": 5, "vz": 6})
+    def find_periodic_orbit(
+        self,
+        opt_vars=["tf", "z", "vy"],
+        obj_zero=["vx", "y"],
+        init_guess=[2.77, 0.82285, 0, 0.05, 0, 0.17, 0],
+        tol=None,
+    ):
+        func_inputs = pd.Series(
+            {"tf": 0, "x": 1, "y": 2, "z": 3, "vx": 4, "vy": 5, "vz": 6}
+        )
         fixed_vars = list(func_inputs.drop(index=opt_vars).keys())
         init_guess = np.array(init_guess)
         opt_paramnums = list(func_inputs[opt_vars].values)
+
         def minFunc(inputs):
             states_in = np.zeros(7)
-            
+
             # insert non-optimization variables
             states_in[func_inputs[fixed_vars]] = init_guess[func_inputs[fixed_vars]]
             states_in[func_inputs[opt_vars]] = inputs
             # prevent time from going to zero (bad optimization)
-            if states_in[0] < 0.5*init_guess[0]: states_in[0] = 0.5*init_guess[0]
-            
+            if states_in[0] < 0.5 * init_guess[0]:
+                states_in[0] = 0.5 * init_guess[0]
+
             _, states = self.propagate_orbit(states_in[1:], states_in[0])
-            state_fin = states[-1,:]
-            
+            state_fin = states[-1, :]
+
             # get objective states and their norm
-            obj_states = np.array(state_fin[func_inputs[obj_zero]-1])
+            obj_states = np.array(state_fin[func_inputs[obj_zero] - 1])
             obj_func = np.linalg.norm(obj_states)
             return obj_func
 
         # init input is init guess for non-set variables
         init_input = init_guess[opt_paramnums]
-        min_object = minimize(minFunc, init_input, method = 'Nelder-Mead', tol=tol)
-        minimizing_guess=min_object.x
+        min_object = minimize(minFunc, init_input, method="Nelder-Mead", tol=tol)
+        minimizing_guess = min_object.x
         optimal_state = np.zeros(7)
         optimal_state[func_inputs[fixed_vars]] = init_guess[func_inputs[fixed_vars]]
         optimal_state[func_inputs[opt_vars]] = minimizing_guess
         return optimal_state
-    
+
     def coupled_stm_eom(self, t, state):
         pv = state[:6]
         dpv = self.eom(t, pv)
@@ -211,7 +217,7 @@ class CR3BP:
 
         dstate = np.array([*dpv, *dstm.flatten()])
         return dstate
-    
+
     def targetter_planar_xfixed(self, X0, tol=1e-10, int_tol=1e-6, max_iters=50):
 
         terminate = lambda t, x: x[1]
@@ -220,9 +226,15 @@ class CR3BP:
         trajs_stms = []
         ics = [X0]
         corrections = []
+        tfs = []
 
         err = np.inf
+        iters = 0
         while np.linalg.norm(err) > tol:
+            if iters >= max_iters:
+                X0 = None
+                break
+            iters += 1
             xstmIC = np.array([*X0, *np.eye(6).flatten()])
             terminate.direction = -int(np.sign(X0[4]))
             soln = solve_ivp(
@@ -236,6 +248,7 @@ class CR3BP:
 
             # no clue why double 0 is needed, but it is
             Xf, STM = soln.y_events[0][0][:6], soln.y_events[0][0][6:].reshape(6, 6)
+            tf = soln.t_events[0][0]
 
             ddx = self.eom(0, Xf)[-3]
             dy = Xf[4]
@@ -247,22 +260,26 @@ class CR3BP:
             X0 += np.array([0, 0, 0, 0, correction, 0])
             ics.append(X0)
             trajs_stms.append(soln.y)
+            tfs.append(tf)
 
-        return X0, trajs_stms, ics, corrections
+        return X0, trajs_stms, ics, corrections, tfs
 
-
-    def targetter_zfixed(self, X0, tol=1e-10, int_tol=1e-6, max_iters = 50):
-
-        # X0 = ref + np.array([dx0, 0, 0, 0, dvy0, 0])
+    def targetter_zfixed(self, X0, tol=1e-10, int_tol=1e-6, max_iters=50):
         terminate = lambda t, x: x[1]
         terminate.terminal = True
 
         trajs_stms = []
         ics = [X0]
         corrections = []
+        tfs = []
 
         err = np.inf
+        iters = 0
         while np.linalg.norm(err) > tol:
+            if iters >= max_iters:
+                X0 = None
+                break
+            iters += 1
             xstmIC = np.array([*X0, *np.eye(6).flatten()])
             terminate.direction = -int(np.sign(X0[4]))
 
@@ -277,6 +294,7 @@ class CR3BP:
 
             # no clue why double 0 is needed, but it is
             Xf, STM = soln.y_events[0][0][:6], soln.y_events[0][0][6:].reshape(6, 6)
+            tf = soln.t_events[0][0]
 
             ddx = self.eom(0, Xf)[-3]
             ddz = self.eom(0, Xf)[-1]
@@ -294,15 +312,14 @@ class CR3BP:
             err = np.linalg.norm([dx, dz])
 
             corrections.append(correction)
-
             X0 += np.array([correction[0], 0, 0, 0, correction[1], 0])
             ics.append(X0)
             trajs_stms.append(soln.y)
+            tfs.append(tf)
 
-        return X0, trajs_stms, ics, corrections
+        return X0, trajs_stms, ics, corrections, tfs
 
-
-    def targetter_xfixed(self, X0, tol=1e-10, int_tol=1e-6, max_iters = 50):
+    def targetter_xfixed(self, X0, tol=1e-10, int_tol=1e-6, max_iters=50):
 
         terminate = lambda t, x: x[1]
         terminate.terminal = True
@@ -310,9 +327,15 @@ class CR3BP:
         trajs_stms = []
         ics = [X0]
         corrections = []
+        tfs = []
 
         err = np.inf
+        iters = 0
         while np.abs(err) > tol:
+            if iters >= max_iters:
+                X0 = None
+                break
+            iters += 1
             xstmIC = np.array([*X0, *np.eye(6).flatten()])
             terminate.direction = -int(np.sign(X0[4]))
 
@@ -327,6 +350,7 @@ class CR3BP:
 
             # no clue why double 0 is needed, but it is
             Xf, STM = soln.y_events[0][0][:6], soln.y_events[0][0][6:].reshape(6, 6)
+            tf = soln.t_events[0][0]
 
             ddx = self.eom(0, Xf)[-3]
             ddz = self.eom(0, Xf)[-1]
@@ -348,5 +372,6 @@ class CR3BP:
             X0 += np.array([0, 0, correction[0], 0, correction[1], 0])
             ics.append(X0)
             trajs_stms.append(soln.y)
+            tfs.append(tf)
 
-        return X0, trajs_stms, ics, corrections
+        return X0, trajs_stms, ics, corrections, tfs

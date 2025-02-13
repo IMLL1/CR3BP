@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Button, Slider, CheckButtons
+from matplotlib.widgets import Button, Slider, RadioButtons
 
 import numpy as np
 from CR3BP import CR3BP
@@ -16,27 +16,17 @@ def f(tf, x0, y0, z0, vx0, vy0, vz0):
 
 
 state_vars = ["tf", "x0", "y0", "z0", "vx0", "vy0", "vz0"]
+slider_vars = ["tf", "x0", "z0", "vy0"]
 # value, slidermin, slidermax
-# defaultvals = {
-#     "tf": [3, 0, 10],
-#     "x0": [0.82, -1, 1],
-#     "y0": [0, -1, 1],
-#     "z0": [0.02, -1, 1],
-#     "vx0": [0, -0.5, 0.5],
-#     "vy0": [0.15, -0.5, 0.5],
-#     "vz0": [0, -0.5, 0.5],
-# }
-
 defaultvals = {
-    "tf": [3, 0, 10],
-    "x0": [0.3618718523685345, -1, 1],
-    "y0": [9.218123740185406e-24, -1, 1],
-    "z0": [2.7335981255904526e-24, -1, 1],
-    "vx0": [1.2868252128805022e-12, -0.5, 0.5],
-    "vy0": [1.7090727637352776, -2, 2],
-    "vz0": [1.458418206338232e-23, -0.5, 0.5],
+    "tf": [2, 0, 5],
+    "x0": [0.825, -1, 1],
+    "y0": [0, -1, 1],
+    "z0": [0.02, -1, 1],
+    "vx0": [0, -0.5, 0.5],
+    "vy0": [0.125, -0.5, 0.5],
+    "vz0": [0, -0.5, 0.5],
 }
-
 
 # Create the figure and the line that we will manipulate
 fig = plt.figure()
@@ -100,11 +90,11 @@ plt.axis("equal")
 
 slider_objs = []
 slider_axes = []
-num_sliders = len(state_vars)
-slider_spacing = 0.045
-margin = 0.03
+num_sliders = len(slider_vars)
+slider_spacing = 0.05
+margin = 0.05
 
-for n, varname in enumerate(state_vars):
+for n, varname in enumerate(slider_vars):
     label_firstletter = varname[0]
     label_rest = varname[1:]
 
@@ -163,49 +153,36 @@ lagrange_btn = Button(lagrange_ax, "Lagrange Pts", hovercolor="0.975", color="0.
 axtoggle_ax = fig.add_axes([0.025, 0.65, 0.075, 0.04])
 axtoggle_btn = Button(axtoggle_ax, "Axes Type", hovercolor="0.975", color="0.25")
 
-
 # Optimizer
-
-label_ax = fig.add_axes([0.025, 0.45, 0.075, 0.04])
-label_ax.text(
-    0.5, 0.5, "Optimization:", verticalalignment="center", horizontalalignment="center"
+optmethod_ax = fig.add_axes([0.025, 0.35, 0.075, 0.1])
+optmethod_btns = RadioButtons(
+    ax=optmethod_ax,
+    labels=["Planar", "X-Fixed", "Z-Fixed"],
+    active=1,
+    label_props={"color": "w"},
+    radio_props={
+        "facecolor": "gray",
+        "edgecolor": "white",
+    },
 )
-label_ax.set_facecolor([0.1, 0.1, 0.1, 0])
-label_ax.set_xticks([])
-label_ax.set_yticks([])
-optimize_ax = fig.add_axes([0.025, 0.21, 0.075, 0.04])
+
+optimize_ax = fig.add_axes([0.025, 0.31, 0.075, 0.04])
 optimize_btn = Button(optimize_ax, "Optimize", hovercolor="0.975", color="0.25")
 
-obj_zero = ["y", "vx", "vz"]
-opt_vars = ["tf", "x", "vy"]
-
-optvar_ax = fig.add_axes([0.025, 0.35, 0.075, 0.1])
-optvar_btns = CheckButtons(
-    ax=optvar_ax,
-    labels=[var + " free" for var in state_vars[1:]],
-    actives=[var[:-1] in opt_vars for var in state_vars[1:]],
-    label_props={"color": "w"},
-    frame_props={"edgecolor": "w"},
-    check_props={"facecolor": "w"},
-)
-
-objzero_ax = fig.add_axes([0.025, 0.25, 0.075, 0.1])
-objzero_btns = CheckButtons(
-    ax=objzero_ax,
-    labels=[var[:-1] + "f=0" for var in state_vars[1:]],
-    actives=[var[:-1] in obj_zero for var in state_vars[1:]],
-    label_props={"color": "w"},
-    frame_props={"edgecolor": "w"},
-    check_props={"facecolor": "w"},
-)
 
 print_ax = fig.add_axes([0.025, 0.14, 0.075, 0.04])
 print_btn = Button(print_ax, "Print ICs", hovercolor="0.975", color="0.25")
 
 
+def get_state():
+    slidervals = [slider.val for slider in slider_objs]
+    ic = [slidervals[0], slidervals[1], 0, slidervals[2], 0, slidervals[3], 0]
+    return np.array(ic)
+
+
 # The function to be called anytime a slider's value changes
 def update(val):
-    states = f(*[slider.val for slider in slider_objs])
+    states = f(*get_state())
     traj[0].set_data_3d(states[:, 0], states[:, 1], states[:, 2])
     fig.canvas.draw_idle()
 
@@ -228,10 +205,10 @@ def update_sliders(zoom=None):
         curr_val = slider.val
         val_range = old_valmax - old_valmin
         new_valmax = (
-            (curr_val + 0.5 * zoom * val_range) if zoom is not None else slider_vals[2]
+            (curr_val + 0.2 * zoom * val_range) if zoom is not None else slider_vals[2]
         )
         new_valmin = (
-            (curr_val - 0.5 * zoom * val_range) if zoom is not None else slider_vals[1]
+            (curr_val - 0.2 * zoom * val_range) if zoom is not None else slider_vals[1]
         )
         new_valinit = curr_val if zoom is not None else slider_vals[0]
 
@@ -291,20 +268,31 @@ def toggle_Lpoints(event):
 
 
 def optimize_ics(event):
-    curr_state = [slider.val for slider in slider_objs]
-    if len(obj_zero) > 0:
-        new_state = obj.find_periodic_orbit(
-            opt_vars=opt_vars, obj_zero=obj_zero, init_guess=curr_state, tol=1e-10
-        )
+    curr_state = get_state()
+    opt_option = optmethod_btns.value_selected
+    if opt_option == "Planar":
+        curr_state[3] = 0
+        corrector = obj.targetter_planar_xfixed
+    elif opt_option == "X-Fixed":
+        corrector = obj.targetter_xfixed
+    elif opt_option == "Z-Fixed":
+        corrector = obj.targetter_zfixed
     else:
+        print("ERR")
+        return 0
+    out_trj, _, ics, _, tfs = corrector(curr_state[1:], 1e-10, 1e-9, 25)
+    if out_trj is None:
         new_state = curr_state
-
+    else:
+        new_state = [tfs[-1] * 2, *out_trj]
     for n, slider in enumerate(slider_objs):
         # eventson = False so that there isn't an infinite loop
         for slider2 in slider_objs:
             if slider2 != slider:
                 slider2.eventson = False
-        slider.set_val(new_state[n])
+        name = slider_vars[n]
+        idx = state_vars.index(name)
+        slider.set_val(new_state[idx])
         for slider2 in slider_objs:
             if slider2 != slider:
                 slider2.eventson = True
@@ -313,24 +301,12 @@ def optimize_ics(event):
 
 def print_ics(event):
     print("\n\n\tInitial Conditions:")
-    for i in range(len(state_vars)):
-        print("%4s: %.16e" % (state_vars[i], slider_objs[i].val))
+    for i in range(len(slider_vars)):
+        print("%4s: %.16e" % (slider_vars[i], slider_objs[i].val))
 
 
-def toggle_objzero(label):
-    varname = label.split("=")[0][:-1]
-    if varname in obj_zero:
-        obj_zero.remove(varname)
-    else:
-        obj_zero.append(varname)
-
-
-def toggle_optvar(label):
-    varname = label.split()[0][:-1]
-    if varname in opt_vars:
-        opt_vars.remove(varname)
-    else:
-        opt_vars.append(varname)
+# def set_opt_option(event):
+#     opt_option = event
 
 
 reset_btn.on_clicked(reset)
@@ -341,8 +317,9 @@ axtoggle_btn.on_clicked(swap_axes)
 lagrange_btn.on_clicked(toggle_Lpoints)
 optimize_btn.on_clicked(optimize_ics)
 print_btn.on_clicked(print_ics)
-objzero_btns.on_clicked(toggle_objzero)
-optvar_btns.on_clicked(toggle_optvar)
+# optmethod_btns.on_clicked(set_opt_option)
+# objzero_btns.on_clicked(toggle_objzero)
+# optvar_btns.on_clicked(toggle_optvar)
 for slider in slider_objs:
     slider.on_changed(update)
 
