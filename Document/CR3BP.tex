@@ -2,12 +2,14 @@
 \usepackage{indentfirst}
 \usepackage{framed}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{tikz}
 \usepackage{tikz-3dplot}
 \usepackage{cancel}
 \usepackage{float}
 \usepackage{comment}
 \usepackage{graphicx}
+\usepackage{bm}
 \graphicspath{ {./Figures/} }
 
 \usepackage[pdfencoding=auto, psdextra]{hyperref}
@@ -20,12 +22,12 @@
 \usepackage[a4paper, left=3.5cm,right=3.5cm, top=3cm, bottom=3cm]{geometry}
 
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
-\newcommand{\vv}[1]{\boldsymbol{#1}}
-\newcommand{\vh}[1]{\boldsymbol{\hat{#1}}}
+\newcommand{\vv}[1]{\bm{#1}}
+\newcommand{\vh}[1]{\bm{\hat{#1}}}
 
 
 \title{Multibody Dynamics Primer}
-\author{Polaris}
+\author{Isaac Lyss-Loren}
 \date{}
 
 \begin{document}
@@ -472,20 +474,151 @@ Motion in the rotating frame acts as "feels" natural under gravitational influen
 
 With what little intuition that can be established having been addressed, canonical families of orbits in the CR3BP can be examined.
 
-In Keplerian mechanics, the space of all possible orbits is five-dimensional\footnote[1]{With an orbit being uniquely determined by semimajor axis, inclination, eccentricity, right ascension of ascending node, and and argument of periapsis while argument of periapsis locates the body along its orbit} with few degenerate cases (such as circular or equatorial orbits) that remove dimensions. Furthermore, all initical conditions in Keplerian dynamics lead to periodic solutions\cite{BasicOrbitalDynamics}. This is not the case for CR3BP dynamics. The constraint of periodicity enforces many requirements on initial conditions, leading to a single-dimensional continuum of periodic orbits where any exist at all [Note to author: this should be cited at some point]. Conventionally, these orbits are broken into a few different "families".
+In Keplerian mechanics, the space of all possible orbits is five-dimensional\footnote[1]{With an orbit being uniquely determined by semimajor axis, inclination, eccentricity, right ascension of ascending node, and and argument of periapsis true anomaly locates the body along its orbit} with few degenerate cases (such as circular or equatorial orbits) that remove dimensions. Furthermore, all initical conditions in Keplerian dynamics lead to periodic solutions\cite{BasicOrbitalDynamics}. This is not the case for CR3BP dynamics. The constraint of periodicity enforces many requirements on initial conditions, leading to a single-dimensional continuum of periodic orbits where any exist at all [Note to author: this should be cited at some point]. Conventionally, these orbits are broken into a few different "families".
 
-Note to the reader: at this point, I have to temporarily stop extending this writup. The most commonly discussed CR3BP orbits are the Halo orbit (including the Near Rectilinear Halo Orbit (NRHO)), Butterfly orbit and Distant Retrograde Orbit (DRO). However, before bifurcation of these trajectories can be discussed, I (the author) must partake in further literature review. My future plans are to
-\begin{enumerate}
-    \item Discuss the distinct features of each orbit family, providing plots of the orbits in that family. \cite{Grebow} will likely be very heavily cited in this section.
-    \item Derive Lissajous orbits, derive stability criteria of linearized system (ideally make a compelling argument that stability of the linearized system $\Leftrightarrow$ stability of nonlinear system)
-    \item Explore possible engineering or scientific use cases for different families
-    \item Describe (and provide plots of) invariant manifolds of L1 and L2
-    \item Discuss how Jacobi constant matters to trajectory
-    \item Investigate transfers between CR3BP trajectories
-    \item Introduce solar gravity perturbation, then frame it as a new source of dynamics. Use this to briefly touch on Bicircular Restricted 4 Body Problem. \cite{mccarthy_quasi-periodic_2022} likely primary jumping off point for this; will explore McCarthy and Howell's citations.
-    \item Explore the impacts of lunar orbit eccentricity on Earth-Moon cislunar trajectories - likely harder to model and make statements about than solar gravity.
-    \item Mention other sources of perturbation (SRP, gravitational harmonics for NRHO/butterfly)
-\end{enumerate}
+\section{Families of Trajectories}
+
+There are a plethora of families of trajectories within CR3BP; infinitely many, in fact\cite{632_notes}. There are many methods of finding them. For the sake of orbital analysis, JPL's three-body-orbit browser likely suffices. However, I will describe natural parameter continuation and differential corrections.
+
+\subsection{Linear Dynamics}
+
+To find a solution near a libration point, linearized dynamics can be used and linear solutions can be corrected.
+
+The linearized dynamics is can be written\cite{632_notes} as
+\begin{equation*}
+    A=\begin{bmatrix}\mathbb{0}&\mathbb{I}\\\boldsymbol{U_{xx}}&\boldsymbol{\Omega}\end{bmatrix} 
+\end{equation*}
+
+Where
+\begin{equation*}
+    \boldsymbol{\Omega} = \begin{bmatrix}0&2&0\\-2&0&0\\0&0&0\end{bmatrix}
+\end{equation*}
+
+And $U_{xx}$ is the Hessian of energy. 
+
+The linear solution is then 
+\begin{equation*}
+    \vv{x}(t)=\sum_{j=1}^6 \vv{C}_j e^{\lambda_j t}
+\end{equation*}
+From numerical methods, $A$ has only two purely imaginary eigenvalues (required for a periodic solution), which will be denoted $\pm s$.
+The linear solution therefore has $x(t)=C_1 \cos(st)+C_2\sin(st)$ and $y(t)=C_3\cos(st)+C_4\sin(st)$. It can be shown [AAE632 notes] that $C_3=iC_1\frac{s^2+U_{xx}}{2s}$  and $C_4=-iC_2\frac{s^2+U_{xx}}{2s}$. This this means that for $y(0)=0$, we have $C_1=-C_2$, and from $x(t)$ we find $C_1=\Delta$ where $\Delta$ is the stepoff from the Lagrange point, This gives $\dot{y}_0=-\frac{s^2+U_{xx}}{2}\Delta$
+
+The linear solution is of course wrong in the nonlinear system, so a differential corrector scheme is utilized to seek symmetry across the $xz$ plane.
+
+\subsection{Differential Corrections}
+
+First, we propagate to the first $xz$-plane crossing. If the change in propagation time $\delta t_f$ is appended to the state, the STM (State Transition Matrix; maps initial deviations to final deviations) becomes
+
+\begin{equation*}
+    \Phi'=\begin{bmatrix}\Phi_{rr}&\Phi_{vv}&\vv{v}\\\Phi_{vr}&\Phi_{vv}&\vv{a}=\end{bmatrix}
+\end{equation*}
+
+Where the prime is used because it's not a "real" state transition matrix. Propagating to the plane then gives us
+
+\begin{equation*}
+    \begin{bmatrix}\delta x\\\delta y\\\delta z\\\delta \dot{x}\\\delta \dot{y}\\\delta \dot{z}\end{bmatrix}_f=\begin{bmatrix}\Phi_{rr}&\Phi_{vv}&\vv{v}\\\Phi_{vr}&\Phi_{vv}&\vv{a}\end{bmatrix}\begin{bmatrix}\delta x\\\delta y\\\delta z\\\delta \dot{x}\\\delta \dot{y}\\\delta \dot{z}\\\delta t\end{bmatrix}_0
+\end{equation*}
+
+Our design variable is only $\delta \dot{y}_0$ and $\delta t$, so all else can be dropped from the right hand side  On the left hand side, we are propagating to the plane, setting $\delta y_f$ to zero, and targeting $\delta \dot{x}_f=0$ for a perpendicular crossing. This gives 
+
+\begin{align*}
+    \begin{bmatrix}\delta y_f\\\delta \dot{x}_f\end{bmatrix}&=
+    \begin{bmatrix}
+    \frac{\partial y_f}{\partial \dot{y}_0}&\frac{\partial y_f}{\partial t}\\\frac{\partial \dot{x}_f}{\partial \dot{y}_0}&\frac{\partial \dot{x}_f}{\partial t}
+    \end{bmatrix}
+    \begin{bmatrix}\delta \dot{y}_0\\\delta t\end{bmatrix}\\
+    \begin{bmatrix}0\\\delta \dot{x}_f\end{bmatrix}&=
+    \begin{bmatrix}
+    \phi_{25}&\dot{y}_f\\\phi_{45}&\ddot{x}_f
+    \end{bmatrix}
+    \begin{bmatrix}\delta \dot{y}_0\\\delta t\end{bmatrix}
+\end{align*}
+
+Looking at just the first row, we have
+\begin{align*}
+    0&=\phi_{25} \delta \dot{y}_0+\dot{y}_f\delta t\\
+    \dot{y}_f\delta t&=-\phi_{25} \delta \dot{y}_0\\
+    \delta t&=-\phi_{25} \frac{\delta\dot{y}_0}{\dot{y}_f}\\
+\end{align*}
+Now, expanding the second row,
+\begin{align*}
+    \delta \dot{x}_f &= \phi_{45}\delta\dot{y}_0+\ddot{x}_f\delta t\\
+    &=\phi_{45}\delta\dot{y}_0+\ddot{x}_f\left(-\phi_{25} \frac{\delta\dot{y}_0}{\dot{y}_f}\right)\\
+    &=\left(\phi_{45}\delta\dot{y}_0-\phi_{25} \frac{\ddot{x}_f}{\dot{y}_f}\right)\delta\dot{y}_0\\
+\end{align*}
+
+We want $\delta \dot{x}_f=-\dot{x}_{f,actual}$ (targetting $\dot{x}_f=0$), so the differential correction becomes
+
+\[\delta\dot{y}_0=\frac{-\dot{x}_{f,actual}}{\left(\phi_{45}\delta\dot{y}_0-\phi_{25} \frac{\ddot{x}_f}{\dot{y}_f}\right)}\]
+
+This gives rise to a new trial initial condition, which is then propagated again to the $xz$-plane crossing, and another differential correction is applied. This is repeated until the correction is within some tolerance. While this process works near the Lagrange point, a sufficiently large step away from the Lagrange point would yeild a fully invalid linear solution.
+
+This family of solutions is called the Lyapunov family:
+
+\begin{figure}[H]
+    \caption{$L_1$ and $L_2$ Lyapunov Families}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Lyapunovs.png}
+\end{figure}
+
+\subsection{Bifurcation To Halo}
+
+If the STM is propagated for a full orbit, it will have six eigenvalues (since $\Phi\in\mathbb{R}^{6\times6}$). Two eigenvalues will be unity (the unity eigenspace goes both along the trajectory and in the direction of the next trajectory). The other four eigenvalues occur in conjugate pairs. When a second trajectory can be continued from a reference trajectory, the new trajectory will undergo a qualitative change from the first. This is a bifurcation, and it can be found when another eigenvalue pair approaches 1. 
+
+Lyapunovs bifurcate to the Halo family, which exhibit out-of-plane behavior. The Halo family includes trajectories that, in the rotating frame, appear nearly planar. These are the Near Rectilinear Halo Orbits (NRHOs).
+
+Once the bifurcation point is found, an out-of-plane targetter can be used to find members of this family. Various targetting schemes exist to find new orbits in a family.
+
+
+\begin{figure}[H]
+    \caption{$L_1$ Halo Family (with some NRHOs)}
+    \centering
+    \includegraphics[width=0.75\textwidth]{HalODetail.png}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{$L_1$ Halo Family (with some NRHOs) - View From $-y$}
+    \centering
+    \includegraphics[width=0.75\textwidth]{HalODetail2.png}
+\end{figure}
+
+\section{Manifolds and Transfers}
+
+Unstable trajectories feature hyperbolic manifolds; these are structures that unstably perturbed points along an orbit will follow. Due to the chaos inherant to the CR3BP dynamical system, these manifolds often reach quite far in the rotating frame.
+
+\begin{figure}[H]
+    \caption{$L_1$ Halo panifolds propagated for 10 TU}
+    \centering
+    \includegraphics[width=0.75\textwidth]{HaloManifolds.jpg}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{$L_1$ Lyapunov manifolds propagated to $xz$-crossing}
+    \centering
+    \includegraphics[width=0.75\textwidth]{L1p0.0395.jpg}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{$L_2$ Lyapunov manifolds propagated for 2 periods}
+    \centering
+    \includegraphics[width=0.75\textwidth]{L2p0.0520.jpg}
+\end{figure}
+
+In the above figures, the titles show Jacobi constants, periods, and initial conditions. The stable and unstable manifolds are both shown. The stable manifold asymtotically approaches the trajectory, while the unstable asymtotically departs it. Cheap transfers can be found by finding points of intersection between the unstable manifolds of one orbit and the stable manifolds of another.
+
+
+% Note to the reader: at this point, I have to temporarily stop extending this writup. The most commonly discussed CR3BP orbits are the Halo orbit (including the Near Rectilinear Halo Orbit (NRHO)), Butterfly orbit and Distant Retrograde Orbit (DRO). However, before bifurcation of these trajectories can be discussed, I (the author) must partake in further literature review. My future plans are to
+% \begin{enumerate}
+%     \item Discuss the distinct features of each orbit family, providing plots of the orbits in that family. \cite{Grebow} will likely be very heavily cited in this section.
+%     \item Derive Lissajous orbits, derive stability criteria of linearized system (ideally make a compelling argument that stability of the linearized system $\Leftrightarrow$ stability of nonlinear system)
+%     \item Explore possible engineering or scientific use cases for different families
+%     \item Describe (and provide plots of) invariant manifolds of L1 and L2
+%     \item Discuss how Jacobi constant matters to trajectory
+%     \item Investigate transfers between CR3BP trajectories
+%     \item Introduce solar gravity perturbation, then frame it as a new source of dynamics. Use this to briefly touch on Bicircular Restricted 4 Body Problem. \cite{mccarthy_quasi-periodic_2022} likely primary jumping off point for this; will explore McCarthy and Howell's citations.
+%     \item Explore the impacts of lunar orbit eccentricity on Earth-Moon cislunar trajectories - likely harder to model and make statements about than solar gravity.
+%     \item Mention other sources of perturbation (SRP, gravitational harmonics for NRHO/butterfly)
+% \end{enumerate}
 
 \newpage
 Note that I consulted many references during the making of this. Where applicable, specific references are cited.
