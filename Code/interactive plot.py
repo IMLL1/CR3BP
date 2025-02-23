@@ -208,7 +208,7 @@ def update_sliders(zoom=None):
         if (varname == "tf") and zoom is not None:
             if zoom < 1:
                 zoom *= 5
-            else:
+            elif zoom > 1:
                 zoom /= 5
             # time zoom should be much less sensative
 
@@ -243,7 +243,7 @@ def reset(event):
 
 
 def center(event):
-    update_sliders(zoom=1)
+    update_sliders(zoom=None)
 
 
 def zoomin(event):

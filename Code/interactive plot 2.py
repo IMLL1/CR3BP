@@ -18,13 +18,23 @@ def f(tf, x0, y0, z0, vx0, vy0, vz0):
 state_vars = ["tf", "x0", "y0", "z0", "vx0", "vy0", "vz0"]
 slider_vars = ["tf", "x0", "z0", "vy0"]
 # value, slidermin, slidermax
+# defaultvals = {
+#     "tf": [2, 0, 5],
+#     "x0": [0.825, -1, 1],
+#     "y0": [0, -1, 1],
+#     "z0": [0.02, -1, 1],
+#     "vx0": [0, -0.5, 0.5],
+#     "vy0": [0.125, -0.5, 0.5],
+#     "vz0": [0, -0.5, 0.5],
+# }
+
 defaultvals = {
-    "tf": [2, 0, 5],
-    "x0": [0.825, -1, 1],
-    "y0": [0, -1, 1],
-    "z0": [0.02, -1, 1],
+    "tf": [2 * np.pi, 2 * np.pi, 10 * np.pi],
+    "x0": [0.93784941, 0.90, 1.05],
+    "y0": [0, -0.05, 0.05],
+    "z0": [0.03, -0.05, 0.05],
     "vx0": [0, -0.5, 0.5],
-    "vy0": [0.125, -0.5, 0.5],
+    "vy0": [0.5480972, 0.4, 0.6],
     "vz0": [0, -0.5, 0.5],
 }
 
@@ -194,9 +204,9 @@ def update_sliders(zoom=None):
         slider_vals = defaultvals[varname]
 
         if (varname == "tf") and zoom is not None:
-            if zoom < 1:
+            if zoom < 0.99:
                 zoom *= 5
-            else:
+            elif zoom > 1.01:
                 zoom /= 5
             # time zoom should be much less sensative
 
@@ -205,10 +215,10 @@ def update_sliders(zoom=None):
         curr_val = slider.val
         val_range = old_valmax - old_valmin
         new_valmax = (
-            (curr_val + 0.2 * zoom * val_range) if zoom is not None else slider_vals[2]
+            (curr_val + zoom * val_range / 2) if zoom is not None else slider_vals[2]
         )
         new_valmin = (
-            (curr_val - 0.2 * zoom * val_range) if zoom is not None else slider_vals[1]
+            (curr_val - zoom * val_range / 2) if zoom is not None else slider_vals[1]
         )
         new_valinit = curr_val if zoom is not None else slider_vals[0]
 
@@ -235,11 +245,11 @@ def center(event):
 
 
 def zoomin(event):
-    update_sliders(zoom=0.1)
+    update_sliders(zoom=0.02)
 
 
 def zoomout(event):
-    update_sliders(zoom=10)
+    update_sliders(zoom=50)
 
 
 def swap_axes(event):
